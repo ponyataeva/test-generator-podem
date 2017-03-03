@@ -1,8 +1,11 @@
+import com.sun.deploy.util.ArrayUtil;
 import file.parser.FileParser;
 import format.Condition;
+import format.GraphUtils;
 import format.LineParser;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,6 +25,8 @@ public class Main {
 
         List<String> lines = FileParser.readFile();
         Map<Set<Condition>, Condition> conditionMap = LineParser.parse(lines);
-        System.out.printf("Hello");
+        for (int[] res : GraphUtils.toMatrix(conditionMap)) {
+            System.out.println(ArrayUtil.arrayToString(new String[]{Arrays.toString(res)}));
+        }
     }
 }

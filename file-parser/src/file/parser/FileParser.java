@@ -1,6 +1,6 @@
 package file.parser;
 
-import format.FilePattern;
+import format.RulePattern;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -20,7 +20,7 @@ public class FileParser {
     public static List<String> readFile() throws IOException {
         List<String> lines = Files.readAllLines(Paths.get(PATH), StandardCharsets.UTF_8);
         List<String> comparedLines = new ArrayList<>();
-        Pattern pattern = Pattern.compile(FilePattern.PATTERN);
+        Pattern pattern = Pattern.compile(RulePattern.PATTERN);
         for (String line : lines) {
             if (pattern.matcher(line).matches()) {
                 comparedLines.add(line);

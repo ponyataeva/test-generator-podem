@@ -26,9 +26,13 @@ public class Condition {
 
     public boolean equals(Object rule) {
         if (rule instanceof Condition) {
-            return condition.equals(rule);
+            return condition.equals(((Condition) rule).getCondition());
         } else {
             return super.equals(rule);
         }
+    }
+
+    public int hashCode() {
+        return condition.hashCode();
     }
 }

@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-import static format.FilePattern.*;
+import static format.RulePattern.*;
 
 /**
  * Add class description
@@ -13,7 +13,7 @@ import static format.FilePattern.*;
 public class LineParser {
 
     public static String getRuleNumber(String line) {
-        String rulePart = findPart(line, RULE);
+        String rulePart = findPart(line, RULE_NUMBER);
         if (rulePart != null) {
             return findPart(rulePart, "[0-9]+");
         }
@@ -55,10 +55,24 @@ public class LineParser {
 
     public static Map<Set<Condition>, Condition> parse(List<String> lines) {
         Map<Set<Condition>, Condition> rules = new HashMap<>();
+        Set<Condition> allConditions = new HashSet<>();
         for (String line : lines) {
             Set<Condition> conditions = new HashSet<>();
             for (String condition : getConditionsList(line)) {
-                conditions.add(new Condition(condition));
+                Condition condition1 = new Condition(condition);
+                if (allConditions.contains(condition1)) {
+                    Iterator iterator = allConditions.iterator();
+                    while (iterator.hasNext()) {
+                        Condition curr = (Condition) iterator.next();
+                        if (curr.equals(condition1)) {
+                            conditions.add(curr);
+                            break;
+                        }
+                    }
+                } else {
+                    allConditions.add(condition1);
+                    conditions.add(condition1);
+                }
             }
             rules.put(conditions, new Condition(getDestination(line)));
         } return rules;
