@@ -22,6 +22,6 @@ public class Main {
 
         List<String> lines = FileParser.readFile();
         Map<Set<Condition>, Condition> conditionMap = LineParser.parse(lines);
-        System.out.printf("Hi");
+        System.out.printf("Hello");
     }
 }
