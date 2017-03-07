@@ -1,15 +1,15 @@
 package entities;
 
 /**
- * Add class description
+ * The preconditions or Action type.
  */
 public class State {
 
     private Integer index;
     private String name;
 
-    public State(String state) {
-        this.name = state;
+    public State(String name) {
+        this.name = name;
     }
 
     public void setIndex(Integer index) {
@@ -34,5 +34,9 @@ public class State {
 
     public int hashCode() {
         return name.hashCode();
+    }
+
+    public String toString() {
+        return index + " = " + name;
     }
 }

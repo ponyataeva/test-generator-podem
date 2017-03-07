@@ -1,28 +1,24 @@
-package line.utils;
+package rule.utils;
 
 import entities.Rule;
 import entities.State;
+import entities.StateUtils;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-import static line.utils.RulePattern.*;
-
 /**
  * Add class description
  */
-public class LineHelper {
+public class TextHelper {
 
     private static final List<String> PATTERNS = Arrays.asList(
-            SINGLE_CONDITION,
-            MULTIPLE_CONDITION);
-    private static Set<State> allStates = new HashSet<>();
-    private static int currentStateIndex = 0;
+            RulePattern.SINGLE_CONDITION,
+            RulePattern.MULTIPLE_CONDITION);
 
     public static String getRuleNumber(String line) {
-        String rulePart = findPart(line, RULE_NUMBER);
+        String rulePart = findPart(line, RulePattern.RULE_NUMBER);
         if (rulePart != null) {
             return findPart(rulePart, "[0-9]+");
         }
@@ -37,16 +33,16 @@ public class LineHelper {
         String[] preconditions = preconditionsPart.split("\\s*и\\s*");
         Set<State> result = new HashSet<>();
         for (String preconditionName : preconditions) {
-            State precondition = getState(preconditionName.replaceAll("\"", ""));
+            State precondition = StateUtils.getState(preconditionName.replaceAll("\"", ""));
             result.add(precondition);
         }
         return result;
     }
 
     private static String getAction(String line) {
-        String action = findPart(line, DESTINATION);
+        String action = findPart(line, RulePattern.DESTINATION);
         if (action != null) {
-            return action.trim().replaceAll(SPACE + THEN + SPACE, "").replaceAll("\"", "");
+            return action.trim().replaceAll(RulePattern.SPACE + RulePattern.THEN + RulePattern.SPACE, "").replaceAll("\"", "");
         }
         return action;
     }
@@ -65,7 +61,7 @@ public class LineHelper {
         List<Rule> rules = new ArrayList<>();
         for (String line : lines) {
             Set<State> preconditions = getPreconditions(line);
-            State action = getState(getAction(line));
+            State action = StateUtils.getState(getAction(line));
             rules.add(new Rule(preconditions, action));
         }
         return rules;
@@ -77,19 +73,5 @@ public class LineHelper {
             return matcher.group();
         }
         return null;
-    }
-
-    private static State getState(String stateName) {
-        State resultState = new State(stateName);
-        for (State state : allStates) {
-            if (state.equals(resultState)) {
-                return state;
-            }
-        }
-        resultState.setIndex(currentStateIndex);
-        currentStateIndex++;
-
-        allStates.add(resultState);
-        return resultState;
     }
 }

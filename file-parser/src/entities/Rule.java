@@ -3,7 +3,7 @@ package entities;
 import java.util.Set;
 
 /**
- *
+ * Consists preconditions and action.
  */
 public class Rule {
 

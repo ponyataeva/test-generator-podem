@@ -1,7 +1,7 @@
-package line.utils;
+package rule.utils;
 
 /**
- * Add class description
+ * Patterns constants.
  */
 public interface RulePattern {
 

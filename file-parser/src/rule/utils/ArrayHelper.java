@@ -1,4 +1,4 @@
-package line.utils;
+package rule.utils;
 
 import entities.Rule;
 import entities.State;
@@ -8,10 +8,18 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Add class description
+ * Helper class for Array of rules.
  */
 public class ArrayHelper {
 
+    /**
+     * Build by list of rules the adjacency matrix.
+     * 0 - if an edge not exists,
+     * 1 - an edge exists.
+     *
+     * @param rules - list with rules.
+     * @return adjacency matrix
+     */
     public static int[][] toArray(List<Rule> rules) {
         Set<State> allStates = new HashSet<>();
         for (Rule rule : rules) {
