@@ -53,18 +53,27 @@ public class FileReader {
             Set<State> preconditions = new HashSet<>();
             for (int j = 2; j < row.getLastCellNum(); j++) {
                 XSSFCell cell = row.getCell(j);
-                String cellValue = cell.getStringCellValue();
+                String cellValue = getCellValue(cell);
                 if (!THEN.equalsIgnoreCase(cellValue)) {
                     preconditions.add(StateUtils.getState(cellValue));
                 } else {
                     cell = row.getCell(j + 1);
-                    State action = StateUtils.getState(cell.getStringCellValue());
+                    State action = StateUtils.getState(getCellValue(cell));
                     rules.add(new Rule(preconditions, action));
                     break;
                 }
             }
         }
         return rules;
+    }
+
+    private static String getCellValue(XSSFCell cell) {
+        int type = cell.getCellType();
+        if (type == 0) {
+            return String.valueOf(cell.getNumericCellValue());
+        } else {
+            return cell.getStringCellValue();
+        }
     }
 
 
