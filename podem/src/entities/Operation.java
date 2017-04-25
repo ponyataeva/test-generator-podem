@@ -1,7 +1,7 @@
 package entities;
 
 /**
- * Add class description
+ * Operation over T6 alphabet.
  */
 public interface Operation {
 

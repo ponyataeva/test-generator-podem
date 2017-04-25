@@ -1,7 +1,7 @@
 package entities;
 
 /**
- * Add class description
+ * T6 alphabet using for Podem algorithm.
  */
 public enum Alphabet implements Operation {
     ZERO {
