@@ -1,4 +1,4 @@
-package file.parser;
+package parser;
 
 
 import entities.Rule;

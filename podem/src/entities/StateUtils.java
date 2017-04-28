@@ -67,6 +67,41 @@ public class StateUtils {
         return states;
     }
 
+    /**
+     * get D-frontier for state
+     * @param matrix
+     * @param stateIndex
+     * @return
+     */
+    public static List<State> getInputs(int[][] matrix, int stateIndex) {
+        List<State> states = new ArrayList<>();
+        for (int i = 0; i < matrix.length; i++) {
+            if (1 == matrix[i][stateIndex]) {
+                State state = getState(i);
+                states.add(state);
+            }
+        }
+        return states;
+    }
+
+    /**
+     * get J-frontier for state
+     *
+     * @param matrix
+     * @param stateIndex
+     * @return
+     */
+    public static List<State> getOutputs(int[][] matrix, int stateIndex) {
+        List<State> states = new ArrayList<>();
+        for (int i = 0; i < matrix.length; i++) {
+            if (1 == matrix[stateIndex][i]) {
+                State state = getState(i);
+                states.add(state);
+            }
+        }
+        return states;
+    }
+
     private static boolean isOutput(int[] stateEdges) {
         for (int stateEdge : stateEdges) {
             if (1 == stateEdge) {

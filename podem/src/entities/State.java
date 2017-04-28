@@ -7,6 +7,7 @@ public class State {
 
     private Integer index;
     private String name;
+    private Alphabet symbol;
 
     public State(String name) {
         this.name = name;
@@ -34,6 +35,14 @@ public class State {
 
     public int hashCode() {
         return name.hashCode();
+    }
+
+    public Alphabet getSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(Alphabet symbol) {
+        this.symbol = symbol;
     }
 
     public String toString() {
