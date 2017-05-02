@@ -45,6 +45,10 @@ public class State {
         this.symbol = symbol;
     }
 
+    public boolean isAssigned() {
+        return symbol == null;
+    }
+
     public String toString() {
         return index + " = " + name;
     }

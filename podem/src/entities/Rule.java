@@ -22,4 +22,20 @@ public class Rule {
     public State getAction() {
         return action;
     }
+
+    public boolean contains(State state) {
+        for (State ruleState : states) {
+            if (ruleState.equals(state)) {
+                return true;
+            }
+        } return false;
+    }
+
+    @Override
+    public String toString() {
+        return "Rule{" +
+                "states = " + states +
+                ", action : " + action +
+                '}';
+    }
 }

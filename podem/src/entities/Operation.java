@@ -3,7 +3,7 @@ package entities;
 /**
  * Operation over T6 alphabet.
  */
-public interface Operation {
+interface Operation {
 
     Alphabet and(Alphabet alphabet);
 
