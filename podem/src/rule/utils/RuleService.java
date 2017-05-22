@@ -1,17 +1,17 @@
 package rule.utils;
 
-import entities.Rule;
+import entities.Gate;
 import entities.State;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Екатерина on 30.04.2017.
  */
 public class RuleService {
 
-    private static List<Rule> allRules;
+    private static List<Gate> allGates;
     private static RuleService service;
 
     private RuleService() {
@@ -24,17 +24,39 @@ public class RuleService {
         return service;
     }
 
-    public static void setAllRules(List<Rule> allRules) {
-        RuleService.allRules = allRules;
+    public static void setAllGates(List<Gate> allGates) {
+        RuleService.allGates = allGates;
     }
 
     /**
      * Get all rules contained target state.
      *
-     * @param state which should contains in rules/
+     * @param state which should containsInput in rules/
      * @return list of rules.
      */
-    public List<Rule> getRulesByState(State state) {
-        return allRules.stream().filter(rule -> rule.contains(state)).collect(Collectors.toList());
+    public List<Gate> getRulesByInput(State state) {
+        List<Gate> gates = new ArrayList<>();
+//        return allGates.stream().filter(rule -> rule.containsInput(state)).collect(Collectors.toList());
+        for (Gate gate : allGates) {
+            if (gate.containsInput(state)) {
+                gates.add(gate);
+            }
+        } return gates;
+    }
+
+    /**
+     * Get all rules contained target state.
+     *
+     * @param state which should containsInput in rules/
+     * @return list of rules.
+     */
+    public List<Gate> getRulesByOutput(State state) {
+        List<Gate> gates = new ArrayList<>();
+//        return allGates.stream().filter(rule -> rule.containsInput(state)).collect(Collectors.toList());
+        for (Gate gate : allGates) {
+            if (gate.containsOutput(state)) {
+                gates.add(gate);
+            }
+        } return gates;
     }
 }

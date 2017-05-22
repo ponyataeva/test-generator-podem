@@ -1,4 +1,6 @@
-package entities;
+package entities.utils;
+
+import entities.State;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -118,5 +120,9 @@ public class StateUtils {
             }
         }
         return true;
+    }
+
+    public static Set<State> getAllStates() {
+        return allStates;
     }
 }

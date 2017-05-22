@@ -37,10 +37,10 @@ public class FileReader {
         return comparedLines;
     }
 
-//    public static List<Rule> readExcel() throws IOException {
+//    public static List<Gate> readExcel() throws IOException {
 //        XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(PATH));
 //        XSSFSheet rulesSheet = workbook.getSheet(RULES_SHEET);
-//        List<Rule> rules = new ArrayList<>();
+//        List<Gate> rules = new ArrayList<>();
 //
 //        for (int i = 1; i <= rulesSheet.getLastRowNum(); i++) {
 //            XSSFRow row = rulesSheet.getRow(i);
@@ -49,11 +49,11 @@ public class FileReader {
 //                XSSFCell cell = row.getCell(j);
 //                String cellValue = getCellValue(cell);
 //                if (!THEN.equalsIgnoreCase(cellValue)) {
-//                    preconditions.add(StateUtils.getState(cellValue));
+//                    preconditions.add(StateUtils.createState(cellValue));
 //                } else {
 //                    cell = row.getCell(j + 1);
-//                    State action = StateUtils.getState(getCellValue(cell));
-//                    rules.add(new Rule(preconditions, action));
+//                    State action = StateUtils.createState(getCellValue(cell));
+//                    rules.add(new Gate(preconditions, action));
 //                    break;
 //                }
 //            }

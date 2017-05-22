@@ -1,13 +1,19 @@
 package entities;
 
+import entities.impl.Value;
+
 /**
- * Operation over T6 alphabet.
+ * Add class description
  */
-interface Operation {
+public interface Operation {
 
-    Alphabet and(Alphabet alphabet);
+    Value execute(Value value1, Value value2);
 
-    Alphabet or(Alphabet alphabet);
+    Value getControllingValue();
 
-    Alphabet not();
+    Value getNonControllingValue();
+
+    int calculateCC0(State... values);
+
+    int calculateCC1(State... values);
 }

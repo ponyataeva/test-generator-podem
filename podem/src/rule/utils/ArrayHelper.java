@@ -1,6 +1,6 @@
 package rule.utils;
 
-import entities.Rule;
+import entities.Gate;
 import entities.State;
 
 import java.util.HashSet;
@@ -13,24 +13,24 @@ import java.util.Set;
 public class ArrayHelper {
 
     /**
-     * Build by list of rules the adjacency matrix.
+     * Build by list of gates the adjacency matrix.
      * 0 - if an edge not exists,
      * 1 - an edge exists.
      *
-     * @param rules - list with rules.
+     * @param gates - list with gates.
      * @return adjacency matrix
      */
-    public static int[][] toArray(List<Rule> rules) {
+    public static int[][] toArray(List<Gate> gates) {
         Set<State> allStates = new HashSet<>();
-        for (Rule rule : rules) {
-            allStates.addAll(rule.getStates());
-            allStates.add(rule.getAction());
+        for (Gate gate : gates) {
+            allStates.addAll(gate.getInputs());
+            allStates.add(gate.getOutput());
         }
         int[][] result = new int[allStates.size()][allStates.size()];
 
-        for (Rule rule : rules) {
-            int destinationIndex = rule.getAction().getIndex();
-            for (State state : rule.getStates()) {
+        for (Gate gate : gates) {
+            int destinationIndex = gate.getOutput().getIndex();
+            for (State state : gate.getInputs()) {
                 result[state.getIndex()][destinationIndex] = 1;
             }
         }

@@ -1,12 +1,15 @@
 package rule.utils;
 
-import entities.Rule;
+import entities.Gate;
 import entities.State;
-import entities.StateUtils;
+import entities.utils.GateUtils;
+import entities.utils.StateUtils;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static entities.impl.OperationImpl.NAND;
 
 /**
  * Add class description
@@ -42,7 +45,7 @@ public class TextHelper {
     private static String getAction(String line) {
         String action = findPart(line, RulePattern.DESTINATION);
         if (action != null) {
-            return action.trim().replaceAll(RulePattern.SPACE + RulePattern.THEN + RulePattern.SPACE, "").replaceAll("\"", "");
+            return action.trim().replaceAll(RulePattern.SPACE + RulePattern.THEN + RulePattern.SPACE, "").replaceAll("\"", "").replaceAll("не\\s", "");
         }
         return action;
     }
@@ -57,14 +60,18 @@ public class TextHelper {
         return null;
     }
 
-    public static List<Rule> parse(List<String> lines) {
-        List<Rule> rules = new ArrayList<>();
+    public static Set<Gate> parse(List<String> lines) {
+        Set<Gate> gates = new HashSet<>();
         for (String line : lines) {
             Set<State> preconditions = getPreconditions(line);
             State action = StateUtils.getState(getAction(line));
-            rules.add(new Rule(preconditions, action));
+            Gate g = GateUtils.getGate(preconditions, action);
+            gates.add(g);
+            if (line.contains("то не")) {
+                g.setOperation(NAND);
+            }
         }
-        return rules;
+        return gates;
     }
 
     private static String findPart(String line, String regexp) {
