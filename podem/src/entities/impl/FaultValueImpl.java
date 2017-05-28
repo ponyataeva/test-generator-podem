@@ -2,8 +2,8 @@ package entities.impl;
 
 import entities.FaultValue;
 
-import static entities.impl.Value.D;
-import static entities.impl.Value.NOT_D;
+import static entities.impl.Value.ONE;
+import static entities.impl.Value.ZERO;
 
 /**
  * Add class description
@@ -20,14 +20,14 @@ public enum FaultValueImpl implements FaultValue {
     sa1 {
         @Override
         public Value getValue() {
-            return D;
+            return ONE;
         }
     },
 
     sa0 {
         @Override
         public Value getValue() {
-            return NOT_D;
+            return ZERO;
         }
     }
 }

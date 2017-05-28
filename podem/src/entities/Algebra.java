@@ -12,4 +12,8 @@ public interface Algebra {
     Value or(Value value);
 
     Value not();
+
+    State getEasiestInput(Gate gate);
+
+    State getHardestInput(Gate gate);
 }

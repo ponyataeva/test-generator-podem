@@ -1,7 +1,6 @@
 import entities.Gate;
 import entities.Scheme;
 import entities.impl.FaultValueImpl;
-import entities.impl.Value;
 import entities.utils.StateUtils;
 import parser.FileReader;
 import rule.utils.TextHelper;
@@ -34,9 +33,9 @@ public class Main {
 //        System.out.println(scheme.toString());
 
         StateUtils.getState("K").setFaultType(FaultValueImpl.sa0);
-        StateUtils.getState("K").setValue(Value.NOT_D);
+//        StateUtils.getState("G").setValue(Value.NOT_D);
         PodemExecutor executer = new PodemExecutor(scheme, StateUtils.getState("K"));
-        System.out.println(StateUtils.getAllStates());
+//        System.out.println(StateUtils.getAllStates());
         executer.execute();
         System.out.println(scheme.getTest());
     }

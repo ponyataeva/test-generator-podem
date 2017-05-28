@@ -53,11 +53,9 @@ public class Gate {
 
     @Override
     public String toString() {
-        return "Gate{" +
+        return "\nGate{" +
                 "inputs=" + inputs +
-                ", output=" + output +
-                ", operation=" + operation +
-                ", index=" + index +
+                ",output=" + output +
                 '}';
     }
 
@@ -81,9 +79,12 @@ public class Gate {
     }
 
     /**
-     * Execute date operation under all inputs.
+     * Execute gate operation under all inputs.
      */
     public void simulate() {
+        if (output.isPrimaryOutput() && !isAllInputsAssigned()) {
+            return;
+        }
         Iterator<State> iterator = inputs.iterator();
         Value result;
         if (iterator.hasNext()) {
@@ -96,6 +97,7 @@ public class Gate {
             result = operation.execute(result, iterator.next().getValue());
         }
         output.setValue(result);
+        System.out.println("Set to" + output.getName() + " value = " + result);
     }
 
     public Operation getOperation() {
@@ -112,5 +114,53 @@ public class Gate {
 
     public int calculateCC1() {
         return operation.calculateCC1(inputs.toArray(new State[inputs.size()]));
+    }
+
+    public State getEasierPathCC0() {
+        State result = null;
+        for (State input : inputs) {
+            if ((result == null || input.getCC0() < result.getCC0()) && isUnassignedPI(input)) {
+                result = input;
+            }
+        }
+        return result;
+    }
+
+    public State getEasierPathCC1() {
+        State result = null;
+        for (State input : inputs) {
+            if ((result == null || input.getCC1() < result.getCC1()) && isUnassignedPI(input)) {
+                result = input;
+            }
+        }
+        return result;
+    }
+
+    public State getHardestPathCC0() {
+        State result = null;
+        for (State input : inputs) {
+            if ((result == null || input.getCC0() > result.getCC0()) && isUnassignedPI(input)) {
+                result = input;
+            }
+        }
+        return result;
+    }
+
+    public State getHardestPathCC1() {
+        State result = null;
+        for (State input : inputs) {
+            if ((result == null || input.getCC1() > result.getCC1()) && isUnassignedPI(input)) {
+                result = input;
+            }
+        }
+        return result;
+    }
+
+    private boolean isUnassignedPI(State state) {
+        return state.isPrimaryInput() && state.isUnassigned();
+    }
+
+    public boolean hasNonControllingValue() {
+        return operation.getNonControllingValue().equals(output.getValue());
     }
 }

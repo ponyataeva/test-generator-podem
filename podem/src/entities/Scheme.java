@@ -67,4 +67,15 @@ public class Scheme {
         test.setPOValue(getPO().getValue());
         return test;
     }
+
+    @Override
+    public String toString() {
+        return "Scheme{" +
+                "allGates=" + allGates +
+                '}';
+    }
+
+    public void print(){
+        System.out.println(this);
+    }
 }

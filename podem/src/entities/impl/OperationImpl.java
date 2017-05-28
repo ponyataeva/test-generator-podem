@@ -11,7 +11,7 @@ public enum OperationImpl implements Operation {
     AND {
         @Override
         public Value execute(Value value1, Value value2) {
-            return value1.and(value1);
+            return value1.and(value2);
         }
 
         @Override
@@ -46,12 +46,12 @@ public enum OperationImpl implements Operation {
     NAND {
         @Override
         public Value execute(Value value1, Value value2) {
-            return value1.and(value1).not();
+            return value1.and(value1).not(); // todo Error. It don't work for more then 2 times
         }
 
         @Override
         public Value getControllingValue() {
-            return Value.ZERO;
+            return Value.ONE;
         }
 
         @Override

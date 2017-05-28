@@ -85,7 +85,7 @@ public class State {
     }
 
     public String toString() {
-        return name + " {index = " + index + " , " + "value = " + value + "}";
+        return "\n" + name + " {index = " + index + " , " + "value = " + value + " , CC0=" + CC0 + " , CC1=" + CC1 + "}";
     }
 
     public Set<Gate> isInputFor() {

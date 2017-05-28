@@ -1,6 +1,8 @@
 package entities.impl;
 
 import entities.Algebra;
+import entities.Gate;
+import entities.State;
 
 /**
  * T6 alphabet using for Podem algorithm.
@@ -21,6 +23,16 @@ public enum Value implements Algebra {
         public Value not() {
             return ONE;
         }
+
+        @Override
+        public State getEasiestInput(Gate gate) {
+            return gate.getEasierPathCC0();
+        }
+
+        @Override
+        public State getHardestInput(Gate gate) {
+            return gate.getHardestPathCC0();
+        }
     },
 
     ONE {
@@ -40,6 +52,16 @@ public enum Value implements Algebra {
         @Override
         public Value not() {
             return ZERO;
+        }
+
+        @Override
+        public State getEasiestInput(Gate gate) {
+            return gate.getEasierPathCC1();
+        }
+
+        @Override
+        public State getHardestInput(Gate gate) {
+            return gate.getHardestPathCC1();
         }
     },
 
@@ -68,6 +90,16 @@ public enum Value implements Algebra {
         public Value not() {
             return NOT_D;
         }
+
+        @Override
+        public State getEasiestInput(Gate gate) {
+            return null;
+        }
+
+        @Override
+        public State getHardestInput(Gate gate) {
+            return null;
+        }
     },
 
     NOT_D {
@@ -95,6 +127,16 @@ public enum Value implements Algebra {
         public Value not() {
             return D;
         }
+
+        @Override
+        public State getEasiestInput(Gate gate) {
+            return null;
+        }
+
+        @Override
+        public State getHardestInput(Gate gate) {
+            return null;
+        }
     },
 
     X {
@@ -111,6 +153,16 @@ public enum Value implements Algebra {
         @Override
         public Value not() {
             return X;
+        }
+
+        @Override
+        public State getEasiestInput(Gate gate) {
+            return null;
+        }
+
+        @Override
+        public State getHardestInput(Gate gate) {
+            return null;
         }
     }
 }
