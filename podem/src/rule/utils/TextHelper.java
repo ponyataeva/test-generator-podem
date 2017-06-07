@@ -28,13 +28,13 @@ public class TextHelper {
         return null;
     }
 
-    private static Set<State> getPreconditions(String line) {
+    private static SortedSet<State> getPreconditions(String line) {
         String preconditionsPart = getPreconditionPart(line);
         if (preconditionsPart == null) {
-            return Collections.EMPTY_SET;
+            return new TreeSet<>();
         }
         String[] preconditions = preconditionsPart.split("\\s*и\\s*");
-        Set<State> result = new HashSet<>();
+        SortedSet<State> result = new TreeSet<>();
         for (String preconditionName : preconditions) {
             State precondition = StateUtils.getState(preconditionName.replaceAll("\"", ""));
             result.add(precondition);
@@ -63,7 +63,7 @@ public class TextHelper {
     public static Set<Gate> parse(List<String> lines) {
         Set<Gate> gates = new HashSet<>();
         for (String line : lines) {
-            Set<State> preconditions = getPreconditions(line);
+            SortedSet<State> preconditions = getPreconditions(line);
             State action = StateUtils.getState(getAction(line));
             Gate g = GateUtils.getGate(preconditions, action);
             gates.add(g);

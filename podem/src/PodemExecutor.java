@@ -34,43 +34,52 @@ public class PodemExecutor {
         // values after fault should be D or not D
 
 
-        while (!faultIsPropagated()) {
-            List<Gate> dFrontier = getDFrontier(fault);
-//            if (xPathCheck(dFrontier)) { // is test possible
-            State state = objective(); // obtain objective
-            state = backtrace(state); // rhere is state is a PI
-            implication.push(state);
-            imply(state);
+        State state = objective(); // obtain objective
+        state = backtrace(state); // there is state is a PI
+        implication.push(state);
+        state.setAlternateAssignmentTried(false);
+        imply(state);
+
+        if (faultIsPropagated()) {
+            return true;
+        }
+        List<Gate> dFrontier = getDFrontier(fault);
+        if (xPathCheck(dFrontier)) { // is test possible
 
             if (execute()) {
-                System.out.println("Success " + scheme.getPIs());
+                System.out.println("Success! Test was generated");
                 generatedTests.add(scheme.getTest());
                 return true;
             }
 
-            state.setValue(state.getValue().not()); // reverse decision TODO backtrack
+            state.setValue(state.getValue().not()); // reverse decision backtrack
             imply(state);
-//            } else {
+        } else {
             while (!isExhausted()) {
                 state = (State) implication.pop();
-                if (!state.isAlternateAssignmentTried()) {
+                if (!state.isAlternateAssignment()) { // TODO rewrite
                     implication.push(state);
                     state.setValue(state.getValue().not());
+                    state.setAlternateAssignmentTried(true);
                     System.out.println("Try to alternate assignment for " + state);
 
                     imply(state);
 
-                    if (execute()) {
-                        System.out.println("Success " + scheme.getPIs());
-                        generatedTests.add(scheme.getTest());
+                    if (faultIsPropagated()) {
                         return true;
+                    }
+                    if (xPathCheck(getDFrontier(fault))) { // is test possible
+                        if (execute()) {
+                            System.out.println("Success " + scheme.getPIs());
+                            generatedTests.add(scheme.getTest());
+                            return true;
+                        }
                     }
                 }
             }
             throw new IllegalStateException("Fault unstable");
-//            }
         }
-        return true;
+        return false;
     }
 
     /**
@@ -82,10 +91,12 @@ public class PodemExecutor {
     private boolean isExhausted() {
         if (scheme.getPIs().size() == implication.height()) {
             State state = (State) implication.pop();
-            if (state.isAlternateAssignmentTried()) {
+            if (state.isAlternateAssignment()) {
                 return true;
             }
             implication.push(state);
+        } else if (implication.height() == 0) {
+            return true;
         }
         return false;
     }
@@ -103,12 +114,20 @@ public class PodemExecutor {
                 state = gate.getOutput();
                 if (state.isUnassigned()) {
                     gate.simulate();
-                } else if (state.equals(fault)) {
-                    if (state.getValue().equals(ONE)) {
-                        state.setValue(D);
-                    } else if (state.getValue().equals(ZERO)) {
-                        state.setValue(NOT_D);
+                } else if (state.equals(fault) && !state.hasDisagreementValue()) {
+                    Value tempValue = state.getValue();
+                    gate.simulate();
+                    if (state.getValue().equals(tempValue)) {
+                        if (state.getValue().equals(ONE)) {
+                            state.setValue(D);
+                        } else if (state.getValue().equals(ZERO)) {
+                            state.setValue(NOT_D);
+                        }
+                    } else {
+                        state.setValue(X);
                     }
+                } else if (state.isAlternateAssignment()) {
+                    gate.simulate();
                 }
             }
         }
@@ -120,6 +139,7 @@ public class PodemExecutor {
      * @param state is objective.
      * @return PI wih assigned value
      */
+
     private State backtrace(State state) {
         Value tempValue = state.getValue();
         while (!state.isPrimaryInput()) {
@@ -161,30 +181,10 @@ public class PodemExecutor {
      */
     private State objective() {
         Value objValue = fault.getFaultType().getValue().not();
-//        State minCC0State = null;
-//        for (Gate faultGate : fault.isOutputFor()) {
-//            for (State faultInput : faultGate.getInputs()) {
-//                if (faultInput.isUnassigned() && (minCC0State == null || faultInput.getCC0() < minCC0State.getCC0())) {
-//                    minCC0State = faultInput;
-//                }
-//            }
-//        }
-//        if (minCC0State != null) {
-//            minCC0State.setValue(fault.getFaultType().getValue());
-//            return minCC0State;
-//        }
         if (fault.isUnassigned()) { // activate fault
             fault.setValue(objValue);
             return fault;
         }
-
-//        // propagate fault effect
-//        // TODO It should execute only one time
-//        if (fault.getValue().equals(ONE)) {
-//            fault.setValue(D);
-//        } else {
-//            fault.setValue(NOT_D);
-//        }
 
         for (Gate target : getDFrontier(fault)) {
             // TODO how to any states settings to D ?
@@ -202,43 +202,8 @@ public class PodemExecutor {
                     return input;
                 }
             }
-//            if (target.getOperation().equals(NAND)) {
-//                targetValue = output.getValue().not();
-//            } else {
-//                targetValue = output.getValue();
-//            }
-
         }
         return null;
-
-//        if (fault.isUnassigned()) {
-//            fault.setValue(fault.getFaultType().getValue());
-//            return fault;
-//        }
-//
-//        for (State state : propogationPath) {
-//            if (state.isUnassigned()) {
-//                state.setValue(state.isOutputFor().iterator().next().getOperation().getNonControllingValue()); // TODO rewrite
-//                System.out.println("As objective was selected " + state);
-//                return state;
-//            }
-//        }
-//        return null;
-//        for (Gate gate : getDFrontier(scheme)) {
-//            for (State input : gate.getInputs()) {
-//                if (input.isUnassigned()) {
-//                    Value ctrlValue;
-//                    if (fault.hasControllingValue(gate.getOperation())) {
-//                        ctrlValue = gate.getOperation().getControllingValue();
-//                    } else {
-//                        ctrlValue = gate.getOperation().getControllingValue().not();
-//                    }
-//                    input.setValue(ctrlValue);
-//                    return input;
-//                }
-//            }
-//        }
-//        return null;
     }
 
     /**
@@ -278,7 +243,7 @@ public class PodemExecutor {
 
     private boolean faultIsPropagated() {
         for (State state : propogationPath) {
-            if (!state.getValue().equals(D) && !state.getValue().equals(NOT_D) && state.isUnassigned()) {
+            if (!(state.getValue().equals(D) || state.getValue().equals(NOT_D))) {
                 return false;
             }
         }
@@ -308,24 +273,5 @@ public class PodemExecutor {
             }
         }
         return minPath;
-    }
-
-
-    private void pathSensitization() {
-//        - Fault Activation: Force tested node to opposite of fault value.
-//        - Fault Propagation: Also called fault sensitization. Propagate the effect to one or
-//        more POs.
-//        - Line justification: Justify internal signal assignments made to activate and sensitize
-//        faults.
-        fault.setValue(fault.getFaultType().getValue().not());
-        for (Gate g : fault.isOutputFor()) {
-            for (State faultInput : g.getInputs()) {
-
-            }
-        }
-    }
-
-    public List<Test> getGeneratedTests() {
-        return generatedTests;
     }
 }

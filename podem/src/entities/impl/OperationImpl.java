@@ -3,6 +3,9 @@ package entities.impl;
 import entities.Operation;
 import entities.State;
 
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * Add class description
  */
@@ -10,8 +13,29 @@ public enum OperationImpl implements Operation {
 
     AND {
         @Override
+        public Value execute(List<Value> values) {
+            if (values == null || values.isEmpty()) {
+                return null;
+            }
+            Iterator<Value> iterator = values.iterator();
+            Value result = iterator.next();
+
+            while (iterator.hasNext()) {
+                result = execute(result, iterator.next());
+            }
+            result = executeInversion(result);
+            return result;
+        }
+
+
+        @Override
         public Value execute(Value value1, Value value2) {
             return value1.and(value2);
+        }
+
+        @Override
+        public Value executeInversion(Value value) {
+            return value;
         }
 
         @Override
@@ -45,8 +69,28 @@ public enum OperationImpl implements Operation {
 
     NAND {
         @Override
+        public Value execute(List<Value> values) {
+            if (values == null || values.isEmpty()) {
+                return null;
+            }
+            Iterator<Value> iterator = values.iterator();
+            Value result = iterator.next();
+
+            while (iterator.hasNext()) {
+                result = execute(result, iterator.next());
+            }
+            result = executeInversion(result);
+            return result;
+        }
+
+        @Override
         public Value execute(Value value1, Value value2) {
-            return value1.and(value1).not(); // todo Error. It don't work for more then 2 times
+            return value1.and(value2);
+        }
+
+        @Override
+        public Value executeInversion(Value value) {
+            return value.not();
         }
 
         @Override
@@ -78,32 +122,50 @@ public enum OperationImpl implements Operation {
         }
     },
 
-    XOR {
-        @Override
-        public Value execute(Value value1, Value value2) {
-            return value1.not().and(value2).or(value1.and(value2.not()));
-        }
-
-        @Override
-        public Value getControllingValue() {
-            return null;
-        }
-
-        @Override
-        public Value getNonControllingValue() {
-            return null;
-        }
-
-        @Override
-        public int calculateCC0(State... vales) {
-            return 0;
-        }
-
-        @Override
-        public int calculateCC1(State... values) {
-            return 0;
-        }
-    }
-
-
+//    XOR {
+//        @Override
+//        public Value execute(List<Value> values) {
+//            if (values == null || values.isEmpty()) {
+//                return null;
+//            }
+//            Iterator<Value> iterator = values.iterator();
+//            Value result = iterator.next();
+//
+//            while (iterator.hasNext()) {
+//                result = execute(result, iterator.next());
+//            }
+//            result = executeInversion(result);
+//            return result;
+//        }
+//
+//        @Override
+//        public Value execute(Value value1, Value value2) {
+//            return value1.not().and(value2).or(value1.and(value2.not()));
+//        }
+//
+//        @Override
+//        public Value executeInversion(Value value) {
+//            return value;
+//        }
+//
+//        @Override
+//        public Value getControllingValue() {
+//            return null;
+//        }
+//
+//        @Override
+//        public Value getNonControllingValue() {
+//            return null;
+//        }
+//
+//        @Override
+//        public int calculateCC0(State... vales) {
+//            return 0;
+//        }
+//
+//        @Override
+//        public int calculateCC1(State... values) {
+//            return 0;
+//        }
+//    }
 }

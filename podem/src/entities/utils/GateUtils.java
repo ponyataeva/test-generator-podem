@@ -5,6 +5,7 @@ import entities.State;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * Add class description
@@ -14,7 +15,7 @@ public class GateUtils {
     private static Set<Gate> allGates = new HashSet<>();
     private static int currentGateIndex = 0;
 
-    public static Gate getGate(Set<State> inputs, State output) {
+    public static Gate getGate(SortedSet<State> inputs, State output) {
         for (Gate gate : allGates) {
             if (gate.getOutput().equals(output)) {
                 gate.addInputs(inputs);
@@ -40,7 +41,7 @@ public class GateUtils {
         }
     }
 
-    public static Set<Gate> getAllGates() {
-        return allGates;
-    }
+//    public static Set<Gate> getAllGates() {
+//        return allGates;
+//    }
 }

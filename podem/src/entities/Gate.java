@@ -2,27 +2,26 @@ package entities;
 
 import entities.impl.Value;
 
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 import static entities.impl.OperationImpl.AND;
 
 /**
  * Consists preconditions and output.
  */
-public class Gate {
+public class Gate implements Comparable<Gate> {
 
-    private Set<State> inputs;
+    private SortedSet<State> inputs;
     private State output;
     private Operation operation = AND;
     private int index;
 
-    public Gate(Set<State> inputs, State output) {
+    public Gate(SortedSet<State> inputs, State output) {
         this.inputs = inputs;
         this.output = output;
     }
 
-    public void addInputs(Set<State> inputs) {
+    public void addInputs(SortedSet<State> inputs) {
         this.inputs.addAll(inputs);
     }
 
@@ -85,19 +84,14 @@ public class Gate {
         if (output.isPrimaryOutput() && !isAllInputsAssigned()) {
             return;
         }
-        Iterator<State> iterator = inputs.iterator();
-        Value result;
-        if (iterator.hasNext()) {
-            result = iterator.next().getValue();
-        } else {
-            return;
+
+        List<Value> values = new ArrayList<>();
+        for (State input : inputs) {
+            values.add(input.getValue());
         }
 
-        while (iterator.hasNext()) {
-            result = operation.execute(result, iterator.next().getValue());
-        }
+        Value result = operation.execute(values);
         output.setValue(result);
-        System.out.println("Set to" + output.getName() + " value = " + result);
     }
 
     public Operation getOperation() {
@@ -129,7 +123,7 @@ public class Gate {
     public State getEasierPathCC1() {
         State result = null;
         for (State input : inputs) {
-            if ((result == null || input.getCC1() < result.getCC1()) && isUnassignedPI(input)) {
+            if (result == null || input.getCC1() < result.getCC1() && isUnassignedPI(input)) {
                 result = input;
             }
         }
@@ -157,10 +151,19 @@ public class Gate {
     }
 
     private boolean isUnassignedPI(State state) {
-        return state.isPrimaryInput() && state.isUnassigned();
+        return state.isPrimaryInput() && (state.isUnassigned() || state.isAlternateAssignment());
     }
 
     public boolean hasNonControllingValue() {
         return operation.getNonControllingValue().equals(output.getValue());
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    @Override
+    public int compareTo(Gate o) {
+        return this.getIndex().compareTo(o.getIndex());
     }
 }
