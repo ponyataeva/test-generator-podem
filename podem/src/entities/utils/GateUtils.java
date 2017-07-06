@@ -3,9 +3,7 @@ package entities.utils;
 import entities.Gate;
 import entities.State;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 
 /**
  * Add class description
@@ -30,6 +28,28 @@ public class GateUtils {
 
         output.addIsOutputFor(resultGate);
         addIsInputFor(inputs, resultGate);
+        currentGateIndex++;
+
+        return resultGate;
+    }
+
+
+    public static Gate getGate(List<State> inputs, State output) {
+        SortedSet<State> set = new TreeSet<>(inputs);
+        for (Gate gate : allGates) {
+            if (gate.getOutput().equals(output)) {
+                gate.addInputs(set);
+                addIsInputFor(set, gate);
+                return gate;
+            }
+        }
+
+        Gate resultGate = new Gate(set, output);
+        resultGate.setIndex(currentGateIndex);
+        allGates.add(resultGate);
+
+        output.addIsOutputFor(resultGate);
+        addIsInputFor(set, resultGate);
         currentGateIndex++;
 
         return resultGate;

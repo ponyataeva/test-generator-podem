@@ -3,17 +3,20 @@ package entities;
 import entities.impl.FaultValueImpl;
 import entities.impl.Value;
 
-import java.util.*;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import static entities.impl.Value.*;
 
 /**
  * The preconditions or Action type.
  */
-public class State implements Comparable {
+@XmlRootElement
+public class State extends XmlBaseObject implements Comparable {
 
-    private Integer index;
-    private String name;
     private Value value = X;
     private FaultValueImpl faultType = FaultValueImpl.NONE;
     private SortedSet<Gate> isInputFor = new TreeSet<>();
@@ -23,52 +26,29 @@ public class State implements Comparable {
 
     private boolean alternateAssignmentTried;
 
+    public State() {
+    }
+
     public State(String name) {
         this.name = name;
     }
 
-    public void setIndex(Integer index) {
-        this.index = index;
-    }
-
-    public Integer getIndex() {
-        if (index == null) {
-            return Integer.MIN_VALUE;
-        }
-        return index;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean equals(Object rule) {
-        if (rule instanceof State) {
-            return name.equals(((State) rule).getName());
-        } else {
-            return super.equals(rule);
-        }
-    }
-
-    public int hashCode() {
-        return name.hashCode();
-    }
-
+    @XmlTransient
     public Value getValue() {
         return value;
     }
 
-    public Value getValue(List<State> pPath) {
-        if (pPath.contains(this)) {
-            // TODO refactor it PLS!
-            if (value.equals(ONE)) {
-                return D;
-            } else if (value.equals(ZERO)) {
-                return NOT_D;
-            }
-        }
-        return value;
-    }
+//    public Value getValue(List<State> pPath) {
+//        if (pPath.contains(this)) {
+//            // TODO refactor it PLS!
+//            if (value.equals(ONE)) {
+//                return D;
+//            } else if (value.equals(ZERO)) {
+//                return NOT_D;
+//            }
+//        }
+//        return value;
+//    }
 
     public void setValue(Value value) {
         this.value = value;
@@ -84,7 +64,7 @@ public class State implements Comparable {
     }
 
     public String toString() {
-        return "\n" + name + " {index = " + index + " , " + "value = " + value + " , CC0=" + CC0 + " , CC1=" + CC1 + "}";
+        return "\n" + name + " {index = " + index + "}";
     }
 
     public SortedSet<Gate> isInputFor() {
@@ -103,6 +83,8 @@ public class State implements Comparable {
         this.isOutputFor.add(gate);
     }
 
+
+    @XmlTransient
     public FaultValueImpl getFaultType() {
         return faultType;
     }
@@ -119,10 +101,12 @@ public class State implements Comparable {
         return isInputFor.isEmpty();
     }
 
-    public boolean hasControllingValue(Operation operation) {
-        return value.equals(operation.getControllingValue());
-    }
+//    public boolean hasControllingValue(Operation operation) {
+//        return value.equals(operation.getControllingValue());
+//    }
 
+
+    @XmlTransient
     public int getCC0() {
         return CC0;
     }
@@ -131,6 +115,8 @@ public class State implements Comparable {
         this.CC0 = CC0;
     }
 
+
+    @XmlTransient
     public int getCC1() {
         return CC1;
     }
@@ -155,4 +141,17 @@ public class State implements Comparable {
     public int compareTo(Object o) {
         return index.compareTo(((State) o).getIndex());
     }
+
+    public boolean equals(Object rule) {
+        if (rule instanceof State) {
+            return name.equals(((State) rule).getName());
+        } else {
+            return super.equals(rule);
+        }
+    }
+
+    public int hashCode() {
+        return name.hashCode();
+    }
+
 }

@@ -1,6 +1,9 @@
 package entities;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Add class description
@@ -35,7 +38,7 @@ public class Scheme {
         System.out.println("Controllability of states calculated success");
     }
 
-    public void calculateControllability(State state) {
+    private void calculateControllability(State state) {
         State out;
         for(Gate gate : state.isInputFor()) {
             out = gate.getOutput();

@@ -26,14 +26,18 @@ public class PodemExecutor {
         findPropagationPath();
     }
 
+    /** TODO выявлять противоречия среди правил
+     * правила долны нумероваться
+     * в одном правиле факт и его инверсия
+     * и в условии и в следствии не может быть один факт
+     * одинаковые условия в правиле, о разные результат
+     * отрицание только в первой части
+     * отрицание часть правила
+     *
+     * @return
+     */
+
     public boolean execute() {
-        // select path for fault propagation from fault to neares PO
-        // select objective
-        // backtrace from objective (set only PI) and put this PI to implication stack
-        // forward implication:
-        // values after fault should be D or not D
-
-
         State state = objective(); // obtain objective
         state = backtrace(state); // there is state is a PI
         implication.push(state);

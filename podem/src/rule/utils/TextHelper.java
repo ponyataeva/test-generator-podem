@@ -1,7 +1,6 @@
 package rule.utils;
 
-import entities.Gate;
-import entities.State;
+import entities.*;
 import entities.utils.GateUtils;
 import entities.utils.StateUtils;
 
