@@ -40,10 +40,10 @@ public class XmlHelper {
             List<State> preconditions = rule.getInputs();
             State action = rule.getOutput();
             Gate g = GateUtils.getGate(preconditions, rule.getOutput());
+            g.setRuleId(rule.getIndex());
             gates.add(g);
             if (action.getName().contains("Не")) {
                 g.setOperation(NAND);
-                String n = action.getName();
             }
         }
         return gates;

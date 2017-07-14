@@ -10,9 +10,15 @@
         <fact id="7">G</fact>
         <fact id="8">J</fact>
         <fact id="9">H</fact>
+
+        <fact id="177">D</fact>
+
         <fact id="10">K</fact>
         <fact id="11">L</fact>
         <fact id="12">M</fact>
+
+        <fact id="13">D</fact>
+        <fact id="15">E</fact>
     </facts>
     <rules>
         <rule id="1">

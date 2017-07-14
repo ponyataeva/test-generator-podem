@@ -38,18 +38,6 @@ public class State extends XmlBaseObject implements Comparable {
         return value;
     }
 
-//    public Value getValue(List<State> pPath) {
-//        if (pPath.contains(this)) {
-//            // TODO refactor it PLS!
-//            if (value.equals(ONE)) {
-//                return D;
-//            } else if (value.equals(ZERO)) {
-//                return NOT_D;
-//            }
-//        }
-//        return value;
-//    }
-
     public void setValue(Value value) {
         this.value = value;
         System.out.println("Set [" + name + "] = " + value);
@@ -61,10 +49,6 @@ public class State extends XmlBaseObject implements Comparable {
 
     public boolean isUnassigned() {
         return !isAssigned();
-    }
-
-    public String toString() {
-        return "\n" + name + " {index = " + index + "}";
     }
 
     public SortedSet<Gate> isInputFor() {
@@ -100,11 +84,6 @@ public class State extends XmlBaseObject implements Comparable {
     public boolean isPrimaryOutput() {
         return isInputFor.isEmpty();
     }
-
-//    public boolean hasControllingValue(Operation operation) {
-//        return value.equals(operation.getControllingValue());
-//    }
-
 
     @XmlTransient
     public int getCC0() {
@@ -144,7 +123,7 @@ public class State extends XmlBaseObject implements Comparable {
 
     public boolean equals(Object rule) {
         if (rule instanceof State) {
-            return name.equals(((State) rule).getName());
+            return name.equals(((State) rule).getName()) && index.equals(((State) rule).getIndex());
         } else {
             return super.equals(rule);
         }
@@ -154,4 +133,7 @@ public class State extends XmlBaseObject implements Comparable {
         return name.hashCode();
     }
 
+    public String toString() {
+        return String.format("(%s) %s", index, name);
+    }
 }

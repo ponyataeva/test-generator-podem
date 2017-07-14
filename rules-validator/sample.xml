@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<root>
+    <rules>
+        <rule id="1">
+            <input id="1">State 1</input>
+            <output id="2">State 2</output>
+        </rule>
+    </rules>
+    <facts>
+        <fact id="1">State 1</fact>
+        <fact id="2">State 2</fact>
+    </facts>
+</root>

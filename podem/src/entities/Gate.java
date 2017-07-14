@@ -15,6 +15,7 @@ public class Gate implements Comparable<Gate> {
     private State output;
     private Operation operation = AND;
     private int index;
+    private Integer ruleId;
 
     public Gate(SortedSet<State> inputs, State output) {
         this.inputs = inputs;
@@ -44,18 +45,6 @@ public class Gate implements Comparable<Gate> {
 
     public boolean containsOutput(State state) {
         return output.equals(state);
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    @Override
-    public String toString() {
-        return "\nGate{" +
-                "inputs=" + inputs +
-                ",output=" + output +
-                '}';
     }
 
     public boolean hasDInput() {
@@ -158,6 +147,18 @@ public class Gate implements Comparable<Gate> {
         return operation.getNonControllingValue().equals(output.getValue());
     }
 
+    public Integer getRuleId() {
+        return ruleId;
+    }
+
+    public void setRuleId(Integer ruleId) {
+        this.ruleId = ruleId;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
     public Integer getIndex() {
         return index;
     }
@@ -165,5 +166,13 @@ public class Gate implements Comparable<Gate> {
     @Override
     public int compareTo(Gate o) {
         return this.getIndex().compareTo(o.getIndex());
+    }
+
+    @Override
+    public String toString() {
+        return "\nGate{" +
+                "inputs=" + inputs +
+                ",output=" + output +
+                '}';
     }
 }
