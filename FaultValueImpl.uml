@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>entities.impl.FaultValueImpl</OriginalElement>
+  <nodes>
+    <node x="879.2451228878649" y="155.5">entities.FaultValue</node>
+    <node x="150.67857142857167" y="1695.5">entities.Fault</node>
+    <node x="348.46655145929356" y="89.0">entities.Operation</node>
+    <node x="858.4004608294931" y="1663.0">entities.impl.Value</node>
+    <node x="907.9951228878649" y="611.0">entities.impl.FaultValueImpl</node>
+    <node x="1012.2451228878649" y="0.0">java.lang.Enum</node>
+    <node x="71.58440860215046" y="2098.0">entities.Scheme</node>
+    <node x="815.6666666666667" y="1862.0">entities.Test</node>
+    <node x="44.0" y="955.0">entities.State</node>
+    <node x="0.0" y="412.0">entities.Gate</node>
+    <node x="670.0833333333334" y="1918.5">entities.impl.OperationImpl</node>
+    <node x="747.7451228878649" y="1209.5">entities.Algebra</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="entities.State" target="entities.Gate">
+      <point x="-264.4" y="-324.0" />
+      <point x="110.10000000000002" y="935.0" />
+      <point x="153.0" y="935.0" />
+      <point x="-153.0" y="246.5" />
+    </edge>
+    <edge source="entities.Gate" target="entities.State">
+      <point x="51.0" y="246.5" />
+      <point x="357.0" y="935.0" />
+      <point x="374.5" y="935.0" />
+      <point x="0.0" y="-324.0" />
+    </edge>
+    <edge source="entities.Scheme" target="entities.Gate">
+      <point x="-117.375" y="-115.0" />
+      <point x="110.70940860215046" y="2078.0" />
+      <point x="33.5" y="2078.0" />
+      <point x="33.5" y="935.0" />
+      <point x="51.0" y="935.0" />
+      <point x="-255.0" y="246.5" />
+    </edge>
+    <edge source="entities.impl.Value" target="entities.Algebra">
+      <point x="-12.25" y="-69.5" />
+      <point x="919.6504608294931" y="1623.0" />
+      <point x="858.7451228878649" y="1623.0" />
+      <point x="0.0" y="69.5" />
+    </edge>
+    <edge source="entities.impl.OperationImpl" target="entities.impl.Value">
+      <point x="27.25" y="-36.5" />
+      <point x="751.8333333333334" y="1832.0" />
+      <point x="931.9004608294931" y="1832.0" />
+      <point x="0.0" y="69.5" />
+    </edge>
+    <edge source="entities.impl.OperationImpl" target="java.lang.Enum">
+      <point x="45.41666666666663" y="-36.5" />
+      <point x="770.0" y="1842.0" />
+      <point x="1282.4117895545314" y="1842.0" />
+      <point x="1282.4117895545314" y="387.0" />
+      <point x="1343.0784562211984" y="387.0" />
+      <point x="132.33333333333337" y="181.0" />
+    </edge>
+    <edge source="entities.Fault" target="entities.State">
+      <point x="0.0" y="-37.0" />
+      <point x="218.67857142857167" y="1643.0" />
+      <point x="280.07142857142844" y="1643.0" />
+      <point x="-94.42857142857156" y="324.0" />
+    </edge>
+    <edge source="entities.impl.OperationImpl" target="entities.Operation">
+      <point x="-9.083333333333371" y="-36.5" />
+      <point x="715.5" y="387.0" />
+      <point x="585.4665514592936" y="387.0" />
+      <point x="79.0" y="92.0" />
+    </edge>
+    <edge source="entities.Scheme" target="entities.Test">
+      <point x="117.375" y="-115.0" />
+      <point x="345.45940860215046" y="2078.0" />
+      <point x="978.6666666666667" y="2078.0" />
+      <point x="0.0" y="93.0" />
+    </edge>
+    <edge source="entities.State" target="entities.impl.Value">
+      <point x="283.2857142857142" y="324.0" />
+      <point x="657.7857142857142" y="1633.0" />
+      <point x="895.1504608294931" y="1633.0" />
+      <point x="-36.75" y="-69.5" />
+    </edge>
+    <edge source="entities.Gate" target="entities.Operation">
+      <point x="0.0" y="-246.5" />
+      <point x="306.0" y="387.0" />
+      <point x="427.46655145929356" y="387.0" />
+      <point x="-79.0" y="92.0" />
+    </edge>
+    <edge source="entities.impl.FaultValueImpl" target="entities.FaultValue">
+      <point x="-27.75" y="-47.5" />
+      <point x="0.0" y="25.5" />
+    </edge>
+    <edge source="entities.impl.OperationImpl" target="entities.State">
+      <point x="-45.41666666666663" y="-36.5" />
+      <point x="679.1666666666667" y="1842.0" />
+      <point x="367.5470430107528" y="1842.0" />
+      <point x="367.5470430107528" y="1643.0" />
+      <point x="374.5" y="1643.0" />
+      <point x="0.0" y="324.0" />
+    </edge>
+    <edge source="entities.impl.Value" target="java.lang.Enum">
+      <point x="61.25" y="-69.5" />
+      <point x="993.1504608294931" y="1643.0" />
+      <point x="1271.4117895545314" y="1643.0" />
+      <point x="1271.4117895545314" y="387.0" />
+      <point x="1210.745122887865" y="387.0" />
+      <point x="0.0" y="181.0" />
+    </edge>
+    <edge source="entities.impl.Value" target="entities.Gate">
+      <point x="12.25" y="-69.5" />
+      <point x="944.1504608294931" y="1623.0" />
+      <point x="980.2451228878649" y="1623.0" />
+      <point x="980.2451228878649" y="925.0" />
+      <point x="561.0" y="925.0" />
+      <point x="255.0" y="246.5" />
+    </edge>
+    <edge source="entities.impl.Value" target="entities.State">
+      <point x="-61.25" y="-69.5" />
+      <point x="870.6504608294931" y="1643.0" />
+      <point x="563.3571428571427" y="1643.0" />
+      <point x="188.85714285714266" y="324.0" />
+    </edge>
+    <edge source="entities.Test" target="entities.impl.Value">
+      <point x="0.0" y="-93.0" />
+      <point x="978.6666666666667" y="1832.0" />
+      <point x="980.9004608294931" y="1832.0" />
+      <point x="49.0" y="69.5" />
+    </edge>
+    <edge source="entities.Scheme" target="entities.State">
+      <point x="-39.125" y="-115.0" />
+      <point x="188.95940860215046" y="2078.0" />
+      <point x="129.17857142857156" y="2078.0" />
+      <point x="129.17857142857156" y="1643.0" />
+      <point x="91.21428571428578" y="1643.0" />
+      <point x="-283.2857142857142" y="324.0" />
+    </edge>
+    <edge source="entities.impl.FaultValueImpl" target="java.lang.Enum">
+      <point x="27.75" y="-47.5" />
+      <point x="991.2451228878649" y="387.0" />
+      <point x="1078.4117895545314" y="387.0" />
+      <point x="-132.33333333333334" y="181.0" />
+    </edge>
+    <edge source="entities.impl.FaultValueImpl" target="entities.impl.Value">
+      <point x="27.75" y="47.5" />
+      <point x="991.2451228878649" y="1633.0" />
+      <point x="968.6504608294931" y="1633.0" />
+      <point x="36.75" y="-69.5" />
+    </edge>
+    <edge source="entities.State" target="entities.impl.FaultValueImpl">
+      <point x="264.4000000000001" y="-324.0" />
+      <point x="638.9000000000001" y="935.0" />
+      <point x="935.7451228878649" y="935.0" />
+      <point x="-27.75" y="47.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.6000000000000001" x="379.1666666666665" y="1932.1666666666665" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

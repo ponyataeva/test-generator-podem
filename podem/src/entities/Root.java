@@ -3,10 +3,7 @@ package entities;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Add class description
@@ -22,6 +19,10 @@ public class Root {
     @XmlElement(name = "facts")
     public StatesList getStatesList() {
         return statesList;
+    }
+
+    public List<State> getStates() {
+        return statesList.getStates();
     }
 
     public void setStatesList(StatesList statesList) {
@@ -41,15 +42,20 @@ public class Root {
         for (Rule rule : rulesList.getRules()) {
             List<State> inputs = new ArrayList<>();
             for (State state : rule.getInputs()) {
-                Integer index = Integer.parseInt(state.getName().replaceAll("Не\\s*", ""));
+                Integer index = Integer.parseInt(state.getName());
                 inputs.add(statesMap.get(index));
             }
             rule.setInputs(inputs);
+            rule.setNegation(rule.getOutput().isNegation());
 
-            Integer index = Integer.parseInt(rule.getOutput().getName().replaceAll("Не\\s*", ""));
+            Integer index = Integer.parseInt(rule.getOutput().getName());
             rule.setOutput(statesMap.get(index));
         }
         this.rulesList = rulesList;
+    }
+
+    public List<Rule> getRules() {
+        return rulesList.getRules();
     }
 
     @XmlRootElement
@@ -62,13 +68,13 @@ public class Root {
         }
 
         @XmlElement(name = "fact")
-        public List<State> getStates() {
+        List<State> getStates() {
             return states;
         }
 
         @Override
         public String toString() {
-            return "StatesList{" +
+            return "\nStatesList{" +
                     "states=" + states +
                     '}';
         }
@@ -90,7 +96,7 @@ public class Root {
 
         @Override
         public String toString() {
-            return "RulesList{" +
+            return "\nRulesList{" +
                     "rules=" + rules +
                     '}';
         }
@@ -100,7 +106,7 @@ public class Root {
     public String toString() {
         return "Root{" +
                 "statesList=" + statesList +
-                ",\n rulesList=" + rulesList +
+                "\nrulesList=" + rulesList +
                 '}';
     }
 }

@@ -12,6 +12,7 @@ public class Rule extends XmlBaseObject {
 
     private List<State> inputs;
     private State output;
+    private boolean isNegation;
 
     @XmlElement(name = "input")
     public List<State> getInputs() {
@@ -31,9 +32,17 @@ public class Rule extends XmlBaseObject {
         this.output = output;
     }
 
+    public boolean isNegation() {
+        return isNegation;
+    }
+
+    public void setNegation(boolean negation) {
+        isNegation = negation;
+    }
+
     @Override
     public String toString() {
-        return "\n Rule{" +
+        return "Rule{" +
                 "index=" + index +
                 ", inputs=" + inputs +
                 ", output=" + output +

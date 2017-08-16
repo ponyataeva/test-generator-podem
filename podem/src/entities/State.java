@@ -3,6 +3,7 @@ package entities;
 import entities.impl.FaultValueImpl;
 import entities.impl.Value;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import java.util.Set;
@@ -23,6 +24,9 @@ public class State extends XmlBaseObject implements Comparable {
     private SortedSet<Gate> isOutputFor = new TreeSet<>();
     private int CC0 = 1;
     private int CC1 = 1;
+
+    @XmlAttribute(name = "isNegation")
+    private boolean isNegation;
 
     private boolean alternateAssignmentTried;
 
@@ -129,8 +133,20 @@ public class State extends XmlBaseObject implements Comparable {
         }
     }
 
+    public boolean inversionOf(Object o) {
+        return o instanceof State && this.name.equals(((State) o).getName());
+    }
+
     public int hashCode() {
         return name.hashCode();
+    }
+
+    public boolean isNegation() {
+        return isNegation;
+    }
+
+    public void setNegation(boolean negation) {
+        isNegation = negation;
     }
 
     public String toString() {

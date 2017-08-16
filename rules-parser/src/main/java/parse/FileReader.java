@@ -1,4 +1,4 @@
-package parser;
+package parse;
 
 
 //import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 /**
  * Add class description
  */
+@Deprecated
 public class FileReader {
 
     private static final String PATH = "test_rules.xlsx";
