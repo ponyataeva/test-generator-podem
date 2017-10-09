@@ -4,8 +4,8 @@ public class Main {
 // TODO переопределить hashCode везде, где переопределен equals
 //
 //    public static void main(String[] args) throws IOException {
-////        Set<Gate> gates = TextHelper.parse(FileReader.readFile());
-//        Set<Gate> gates = XmlHelper.parse();
+////        Set<Gate> gates = TextHelper.rules.parser.parse(FileReader.readFile());
+//        Set<Gate> gates = XmlHelper.rules.parser.parse();
 //        Scheme scheme = new Scheme(gates);
 ////        System.out.println(scheme.toString());
 //

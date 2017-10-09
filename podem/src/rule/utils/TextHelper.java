@@ -1,14 +1,20 @@
 package rule.utils;
 
-import entities.*;
-import entities.utils.GateUtils;
-import entities.utils.StateUtils;
+import model.entities.Gate;
+import model.entities.State;
+import model.entities.utils.GateUtils;
+import model.entities.utils.StateUtils;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static entities.impl.OperationImpl.NAND;
+import static model.entities.impl.OperationImpl.NAND;
 
 /**
  * Add class description

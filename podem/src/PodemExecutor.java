@@ -1,13 +1,16 @@
 import antlr.collections.Stack;
 import antlr.collections.impl.LList;
-import entities.*;
-import entities.impl.Value;
+import model.entities.Gate;
+import model.entities.Scheme;
+import model.entities.State;
+import model.entities.Test;
+import model.entities.impl.Value;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static entities.impl.OperationImpl.NAND;
-import static entities.impl.Value.*;
+import static model.entities.impl.OperationImpl.NAND;
+import static model.entities.impl.Value.*;
 
 /**
  * Add class description

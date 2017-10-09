@@ -1,7 +1,7 @@
 package rule.utils;
 
-import entities.Gate;
-import entities.State;
+import model.entities.Gate;
+import model.entities.State;
 
 import java.util.HashSet;
 import java.util.List;
