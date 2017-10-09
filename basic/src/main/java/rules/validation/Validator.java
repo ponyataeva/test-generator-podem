@@ -5,14 +5,12 @@ import model.entities.Rule;
 import model.entities.State;
 import rules.parser.utils.XMLValidationException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * TODO выявлять противоречия среди правил
  * правила долны нумероваться
- * в одном правиле факт и его инверсия
+ * + в одном правиле факт и его инверсия
  * + и в условии и в следствии не может быть один факт
  * одинаковые условия в правиле, о разные результат
  * отрицание только в первой части
@@ -33,7 +31,7 @@ public class Validator {
     }
 
     public void doValidation() {
-        checkDuplicateFacts(this.root.getStates());
+        validateDuplicateFacts(this.root.getStates());
         validateInversionsExists(this.root.getRules());
     }
 
@@ -42,18 +40,17 @@ public class Validator {
      * Will print all duplicates except for the first.
      *
      * @param facts dirty list of facts.
-     * @return clear list of facts.
      */
-    public static List<State> checkDuplicateFacts(List<State> facts) {
-        List<State> results = new ArrayList<>(facts);
+    public static void validateDuplicateFacts(List<State> facts) {
         StringBuilder args = new StringBuilder("");
         for (int i = 0; i < facts.size(); i++) {
             State fact = facts.get(i);
             StringBuilder duplicatesList = new StringBuilder("");
+
             for (int j = i + 1; j < facts.size(); j++) {
                 State duplicate = facts.get(j);
                 boolean isEqualName = fact.getName().equals(duplicate.getName());
-                if (isEqualName && results.remove(duplicate)) {
+                if (isEqualName) {
                     duplicatesList.append(duplicate.toString());
                 }
             }
@@ -64,9 +61,6 @@ public class Validator {
         if (args.length() != 0) {
             throw new XMLValidationException(DUPLICATES_FOUND + args);
         }
-
-        System.out.println("Result:" + Arrays.toString(results.toArray()));
-        return results;
     }
 
     /**
@@ -77,9 +71,14 @@ public class Validator {
      */
     public static void validateInversionsExists(List<Rule> rules) {
         StringBuilder errMsg = new StringBuilder("");
-        for (Rule rule : rules) {
+        for (int i = 0; i < rules.size(); i++) {
+            Rule rule = rules.get(i);
             errMsg.append(validateNegation(rule));
-            errMsg.append(validateDuplicates(rule));
+            errMsg.append(validateDuplicateInRules(rule));
+
+            for (int j = i + 1; j< rules.size(); j++) {
+                // TODO check that doesn't exist rule with the same conditions and other action pat
+            }
         }
         if (errMsg.length() != 0) {
             throw new XMLValidationException(errMsg.toString());
@@ -92,7 +91,7 @@ public class Validator {
         } else return "";
     }
 
-    private static String validateDuplicates(Rule rule) {
+    private static String validateDuplicateInRules(Rule rule) {
         State out = rule.getOutput();
         for (State fact : rule.getInputs()) {
             if (out.equals(fact)) {
