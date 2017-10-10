@@ -7,6 +7,8 @@ import rules.parser.utils.XMLValidationException;
 
 import java.util.List;
 
+import static java.lang.String.format;
+
 /**
  * TODO выявлять противоречия среди правил
  * правила долны нумероваться
@@ -20,9 +22,10 @@ public class Validator {
 
     private static final String DUPLICATES_FOUND = "The list of facts contain next duplicate(s):";
     private static final String DUPLICATE_ARGS = "\nFor %s: %s";
-    private static final String INVERSIONS_FOUND = "\nFor fact '%s' in the rule '%s' contains him inversions";
-    private static final String DUPLICATES_IN_RULE_FOUND = "\nThe rule '%s' contains same fact in condition and action parts";
-    private static final String NEGATION_IN_OUT = "\nThe rule '%s' contains negation in action part";
+    private static final String INVERSIONS_FOUND = "For fact '%s' in the rule '%s' contains him inversions";
+    private static final String DUPLICATES_IN_RULE_FOUND = "The rule '%s' contains same fact in condition and action parts";
+    private static final String NEGATION_IN_OUT = "The rule '%s' contains negation in action part";
+    private static final String SAME_CONDITIONS_OTHER_ACTION = "The rule '%s' has the same condition(s) part as '%s' but other action part.";
 
     private Root root;
 
@@ -70,41 +73,43 @@ public class Validator {
      * @param rules list of rules for check.
      */
     public static void validateInversionsExists(List<Rule> rules) {
-        StringBuilder errMsg = new StringBuilder("");
         for (int i = 0; i < rules.size(); i++) {
             Rule rule = rules.get(i);
-            errMsg.append(validateNegation(rule));
-            errMsg.append(validateDuplicateInRules(rule));
+            validateNegation(rule);
+            validateDuplicateInRules(rule);
+            validateSameConditionsWithOtherAction(rule, rules);
+        }
+    }
 
-            for (int j = i + 1; j< rules.size(); j++) {
-                // TODO check that doesn't exist rule with the same conditions and other action pat
+    private static void validateSameConditionsWithOtherAction(Rule source, List<Rule> target) {
+        int i = target.indexOf(source);
+        for (int j = i + 1; j < target.size(); j++) {
+            Rule temp = target.get(j);
+            if (source.getInputs().equals(temp.getInputs()) && !(source.getOutput().equals(temp.getOutput()))) {
+                throw new XMLValidationException(format(SAME_CONDITIONS_OTHER_ACTION, temp.getIndex(), source.getIndex()));
             }
         }
-        if (errMsg.length() != 0) {
-            throw new XMLValidationException(errMsg.toString());
+    }
+
+    private static void validateNegation(Rule rule) {
+        if (rule.getOutput().isNegation()) {
+            throw new XMLValidationException(format(NEGATION_IN_OUT, rule.toString()));
         }
     }
 
-    private static String validateNegation(Rule rule) {
-        if (rule.getOutput().isNegation()) {
-            return getFormattedMessage(NEGATION_IN_OUT, rule.toString());
-        } else return "";
-    }
-
-    private static String validateDuplicateInRules(Rule rule) {
+    private static void validateDuplicateInRules(Rule rule) {
         State out = rule.getOutput();
         for (State fact : rule.getInputs()) {
             if (out.equals(fact)) {
                 if (rule.isNegation()) {
-                    return getFormattedMessage(INVERSIONS_FOUND, fact.toString(), rule.toString());
+                    throw new XMLValidationException(format(INVERSIONS_FOUND, fact.toString(), rule.toString()));
                 }
-                return getFormattedMessage(DUPLICATES_IN_RULE_FOUND, rule.toString());
+                throw new XMLValidationException(format(DUPLICATES_IN_RULE_FOUND, rule.toString()));
             }
         }
-        return "";
     }
 
     private static String getFormattedMessage(String message, Object... v) {
-        return String.format(message, v);
+        return format(message, v);
     }
 }
