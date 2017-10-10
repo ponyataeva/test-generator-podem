@@ -11,12 +11,15 @@ import static java.lang.String.format;
 
 /**
  * TODO выявлять противоречия среди правил
- * правила долны нумероваться
+ * + правила долны нумероваться
  * + в одном правиле факт и его инверсия
  * + и в условии и в следствии не может быть один факт
- * одинаковые условия в правиле, о разные результат
- * отрицание только в первой части
+ * + одинаковые условия в правиле, но разные результат
+ * + отрицание только в первой части
  * отрицание часть правила
+ *
+ * v2.
+ * Проверять что нумерация фактов и правил не дублируется.
  */
 public class Validator {
 
@@ -34,8 +37,8 @@ public class Validator {
     }
 
     public void doValidation() {
-        validateDuplicateFacts(this.root.getStates());
-        validateInversionsExists(this.root.getRules());
+        validateFacts(this.root.getStates());
+        validateRules(this.root.getRules());
     }
 
     /**
@@ -44,7 +47,7 @@ public class Validator {
      *
      * @param facts dirty list of facts.
      */
-    public static void validateDuplicateFacts(List<State> facts) {
+    private void validateFacts(List<State> facts) {
         StringBuilder args = new StringBuilder("");
         for (int i = 0; i < facts.size(); i++) {
             State fact = facts.get(i);
@@ -58,7 +61,7 @@ public class Validator {
                 }
             }
             if (duplicatesList.length() != 0) {
-                args.append(getFormattedMessage(DUPLICATE_ARGS, fact.toString(), duplicatesList));
+                args.append(format(DUPLICATE_ARGS, fact.toString(), duplicatesList));
             }
         }
         if (args.length() != 0) {
@@ -72,7 +75,7 @@ public class Validator {
      *
      * @param rules list of rules for check.
      */
-    public static void validateInversionsExists(List<Rule> rules) {
+    private void validateRules(List<Rule> rules) {
         for (int i = 0; i < rules.size(); i++) {
             Rule rule = rules.get(i);
             validateNegation(rule);
@@ -107,9 +110,5 @@ public class Validator {
                 throw new XMLValidationException(format(DUPLICATES_IN_RULE_FOUND, rule.toString()));
             }
         }
-    }
-
-    private static String getFormattedMessage(String message, Object... v) {
-        return format(message, v);
     }
 }

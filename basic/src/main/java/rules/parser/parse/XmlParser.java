@@ -39,8 +39,7 @@ public class XmlParser {
     private static Set<Gate> doParse() {
         Root root = parseToRoot();
         System.out.println(root);
-        Validator.validateDuplicateFacts(root.getStates());
-        Validator.validateInversionsExists(root.getRules());
+        new Validator(root).doValidation();
         return getGates(root);
     }
 
