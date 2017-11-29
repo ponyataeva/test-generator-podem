@@ -12,13 +12,13 @@ public class Scheme {
 
     private Set<Gate> allGates = new HashSet<>();
 
-    private List<State> PIs = new ArrayList<>();
-    private State PO;
+    private List<Fact> PIs = new ArrayList<>();
+    private Fact PO;
 
     public Scheme(Set<Gate> allGates) {
         this.allGates = allGates;
         for (Gate gate : this.allGates) {
-            for (State input : gate.getInputs()) {
+            for (Fact input : gate.getInputs()) {
                 if (input.isPrimaryInput()) {
                     PIs.add(input);
                 }
@@ -32,31 +32,31 @@ public class Scheme {
     }
 
     private void calculateControllability() {
-        for (State pi : PIs) {
+        for (Fact pi : PIs) {
             calculateControllability(pi);
         }
         System.out.println("Controllability of states calculated success");
     }
 
-    private void calculateControllability(State state) {
-        State out;
-        for(Gate gate : state.isInputFor()) {
+    private void calculateControllability(Fact fact) {
+        Fact out;
+        for(Gate gate : fact.isInputFor()) {
             out = gate.getOutput();
             out.setCC0(gate.calculateCC0());
             out.setCC1(gate.calculateCC1());
         }
 
-        for(Gate gate : state.isInputFor()) {
+        for(Gate gate : fact.isInputFor()) {
             calculateControllability(gate.getOutput());
         }
     }
 
 
-    public List<State> getPIs() {
+    public List<Fact> getPIs() {
         return PIs;
     }
 
-    public State getPO() {
+    public Fact getPO() {
         return PO;
     }
 

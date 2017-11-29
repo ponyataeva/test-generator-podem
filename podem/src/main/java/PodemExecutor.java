@@ -1,8 +1,8 @@
 import antlr.collections.Stack;
 import antlr.collections.impl.LList;
+import model.entities.Fact;
 import model.entities.Gate;
 import model.entities.Scheme;
-import model.entities.State;
 import model.entities.Test;
 import model.entities.impl.Value;
 
@@ -19,11 +19,11 @@ public class PodemExecutor {
 
     private List<Test> generatedTests = new ArrayList<>();
     private Scheme scheme;
-    private State fault;
+    private Fact fault;
     private Stack implication = new LList();
-    private List<State> propogationPath = new ArrayList<>();
+    private List<Fact> propogationPath = new ArrayList<>();
 
-    public PodemExecutor(Scheme scheme, State fault) {
+    public PodemExecutor(Scheme scheme, Fact fault) {
         this.scheme = scheme;
         this.fault = fault;
         findPropagationPath();
@@ -41,11 +41,11 @@ public class PodemExecutor {
      */
 
     public boolean execute() {
-        State state = objective(); // obtain objective
-        state = backtrace(state); // there is state is a PI
-        implication.push(state);
-        state.setAlternateAssignmentTried(false);
-        imply(state);
+        Fact fact = objective(); // obtain objective
+        fact = backtrace(fact); // there is fact is a PI
+        implication.push(fact);
+        fact.setAlternateAssignmentTried(false);
+        imply(fact);
 
         if (faultIsPropagated()) {
             return true;
@@ -59,18 +59,18 @@ public class PodemExecutor {
                 return true;
             }
 
-            state.setValue(state.getValue().not()); // reverse decision backtrack
-            imply(state);
+            fact.setValue(fact.getValue().not()); // reverse decision backtrack
+            imply(fact);
         } else {
             while (!isExhausted()) {
-                state = (State) implication.pop();
-                if (!state.isAlternateAssignment()) { // TODO rewrite
-                    implication.push(state);
-                    state.setValue(state.getValue().not());
-                    state.setAlternateAssignmentTried(true);
-                    System.out.println("Try to alternate assignment for " + state);
+                fact = (Fact) implication.pop();
+                if (!fact.isAlternateAssignment()) { // TODO rewrite
+                    implication.push(fact);
+                    fact.setValue(fact.getValue().not());
+                    fact.setAlternateAssignmentTried(true);
+                    System.out.println("Try to alternate assignment for " + fact);
 
-                    imply(state);
+                    imply(fact);
 
                     if (faultIsPropagated()) {
                         return true;
@@ -97,11 +97,11 @@ public class PodemExecutor {
 
     private boolean isExhausted() {
         if (scheme.getPIs().size() == implication.height()) {
-            State state = (State) implication.pop();
-            if (state.isAlternateAssignment()) {
+            Fact fact = (Fact) implication.pop();
+            if (fact.isAlternateAssignment()) {
                 return true;
             }
-            implication.push(state);
+            implication.push(fact);
         } else if (implication.height() == 0) {
             return true;
         }
@@ -113,27 +113,27 @@ public class PodemExecutor {
      * When the input to a logic gate are significantly labeled,
      * the output can be uniquely determined.
      *
-     * @param state
+     * @param fact
      */
-    private void imply(State state) {
-        while (!state.isPrimaryOutput()) {
-            for (Gate gate : state.isInputFor()) {
-                state = gate.getOutput();
-                if (state.isUnassigned()) {
+    private void imply(Fact fact) {
+        while (!fact.isPrimaryOutput()) {
+            for (Gate gate : fact.isInputFor()) {
+                fact = gate.getOutput();
+                if (fact.isUnassigned()) {
                     gate.simulate();
-                } else if (state.equals(fault) && !state.hasDisagreementValue()) {
-                    Value tempValue = state.getValue();
+                } else if (fact.equals(fault) && !fact.hasDisagreementValue()) {
+                    Value tempValue = fact.getValue();
                     gate.simulate();
-                    if (state.getValue().equals(tempValue)) {
-                        if (state.getValue().equals(ONE)) {
-                            state.setValue(D);
-                        } else if (state.getValue().equals(ZERO)) {
-                            state.setValue(NOT_D);
+                    if (fact.getValue().equals(tempValue)) {
+                        if (fact.getValue().equals(ONE)) {
+                            fact.setValue(D);
+                        } else if (fact.getValue().equals(ZERO)) {
+                            fact.setValue(NOT_D);
                         }
                     } else {
-                        state.setValue(X);
+                        fact.setValue(X);
                     }
-                } else if (state.isAlternateAssignment()) {
+                } else if (fact.isAlternateAssignment()) {
                     gate.simulate();
                 }
             }
@@ -143,41 +143,41 @@ public class PodemExecutor {
     /**
      * Map a desired objective into a PI assignment.
      *
-     * @param state is objective.
+     * @param fact is objective.
      * @return PI wih assigned value
      */
 
-    private State backtrace(State state) {
-        Value tempValue = state.getValue();
-        while (!state.isPrimaryInput()) {
-            for (Gate gate : state.isOutputFor()) {
+    private Fact backtrace(Fact fact) {
+        Value tempValue = fact.getValue();
+        while (!fact.isPrimaryInput()) {
+            for (Gate gate : fact.isOutputFor()) {
                 if (gate.getOperation().equals(NAND)) {
                     tempValue = tempValue.not();
                 }
-                if (allInputsNeedSet(gate, state)) {
-                    if (state.getValue().equals(ONE)) {
-                        state = gate.getHardestPathCC1();
+                if (allInputsNeedSet(gate, fact)) {
+                    if (fact.getValue().equals(ONE)) {
+                        fact = gate.getHardestPathCC1();
                     } else {
-                        state = gate.getHardestPathCC0();
+                        fact = gate.getHardestPathCC0();
                     }
                 } else {
-                    if (state.getValue().equals(ONE)) {
-                        state = gate.getEasierPathCC1();
+                    if (fact.getValue().equals(ONE)) {
+                        fact = gate.getEasierPathCC1();
                     } else {
-                        state = gate.getEasierPathCC0();
+                        fact = gate.getEasierPathCC0();
                     }
-                    State b = backtrace(state);
+                    Fact b = backtrace(fact);
                     if (b != null) {
-                        state = b;
+                        fact = b;
                     }
                 }
             }
         }
-        state.setValue(tempValue);
-        return state;
+        fact.setValue(tempValue);
+        return fact;
     }
 
-    private boolean allInputsNeedSet(Gate g, State output) {
+    private boolean allInputsNeedSet(Gate g, Fact output) {
         return g.getOperation() == NAND && output.getValue().equals(ZERO);
     }
 
@@ -186,7 +186,7 @@ public class PodemExecutor {
      *
      * @return a gate from D-frontier
      */
-    private State objective() {
+    private Fact objective() {
         Value objValue = fault.getFaultType().getValue().not();
         if (fault.isUnassigned()) { // activate fault
             fault.setValue(objValue);
@@ -195,7 +195,7 @@ public class PodemExecutor {
 
         for (Gate target : getDFrontier(fault)) {
             // TODO how to any states settings to D ?
-            State output = target.getOutput();
+            Fact output = target.getOutput();
             // find the shortest unassigned path
             if (!propogationPath.contains(output) || output.isAssigned()) {
                 continue;
@@ -203,7 +203,7 @@ public class PodemExecutor {
             if (target.hasNonControllingValue()) {
                 objValue = target.getOperation().getNonControllingValue();
             }
-            for (State input : target.getInputs()) {
+            for (Fact input : target.getInputs()) {
                 if (input.isUnassigned()) {
                     input.setValue(objValue);
                     return input;
@@ -221,7 +221,7 @@ public class PodemExecutor {
      */
     private boolean xPathCheck(List<Gate> dFrontier) {
         for (Gate gate : dFrontier) {
-            State out = gate.getOutput();
+            Fact out = gate.getOutput();
             if (out.isUnassigned()) {
                 return out.isPrimaryOutput() || xPathCheck(new ArrayList<>(out.isInputFor()));
             }
@@ -236,7 +236,7 @@ public class PodemExecutor {
      *
      * @return
      */
-    private List<Gate> getDFrontier(State fault) {
+    private List<Gate> getDFrontier(Fact fault) {
         List<Gate> dFrontier = new ArrayList<>();
         for (Gate gate : fault.isInputFor()) {
             if (gate.getOutput().isUnassigned() && gate.hasDInput()) {
@@ -249,8 +249,8 @@ public class PodemExecutor {
     }
 
     private boolean faultIsPropagated() {
-        for (State state : propogationPath) {
-            if (!(state.getValue().equals(D) || state.getValue().equals(NOT_D))) {
+        for (Fact fact : propogationPath) {
+            if (!(fact.getValue().equals(D) || fact.getValue().equals(NOT_D))) {
                 return false;
             }
         }
@@ -263,11 +263,11 @@ public class PodemExecutor {
         System.out.println("Fault Propagation path is " + propogationPath);
     }
 
-    private List<State> searchPath(State state) {
-        List<State> temp = new ArrayList<>();
-        List<State> minPath = new ArrayList<>();
-        for (Gate gate : state.isInputFor()) {
-            State out = gate.getOutput();
+    private List<Fact> searchPath(Fact fact) {
+        List<Fact> temp = new ArrayList<>();
+        List<Fact> minPath = new ArrayList<>();
+        for (Gate gate : fact.isInputFor()) {
+            Fact out = gate.getOutput();
             temp.add(out);
             if (out.isPrimaryOutput()) {
                 return temp;

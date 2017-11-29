@@ -1,7 +1,7 @@
 package rule.utils;
 
 import model.entities.Gate;
-import model.entities.State;
+import model.entities.Fact;
 import model.entities.utils.GateUtils;
 import model.entities.utils.StateUtils;
 
@@ -33,15 +33,15 @@ public class TextHelper {
         return null;
     }
 
-    private static SortedSet<State> getPreconditions(String line) {
+    private static SortedSet<Fact> getPreconditions(String line) {
         String preconditionsPart = getPreconditionPart(line);
         if (preconditionsPart == null) {
             return new TreeSet<>();
         }
         String[] preconditions = preconditionsPart.split("\\s*и\\s*");
-        SortedSet<State> result = new TreeSet<>();
+        SortedSet<Fact> result = new TreeSet<>();
         for (String preconditionName : preconditions) {
-            State precondition = StateUtils.getState(preconditionName.replaceAll("\"", ""));
+            Fact precondition = StateUtils.getState(preconditionName.replaceAll("\"", ""));
             result.add(precondition);
         }
         return result;
@@ -68,8 +68,8 @@ public class TextHelper {
     public static Set<Gate> parse(List<String> lines) {
         Set<Gate> gates = new HashSet<>();
         for (String line : lines) {
-            SortedSet<State> preconditions = getPreconditions(line);
-            State action = StateUtils.getState(getAction(line));
+            SortedSet<Fact> preconditions = getPreconditions(line);
+            Fact action = StateUtils.getState(getAction(line));
             Gate g = GateUtils.getGate(preconditions, action);
             gates.add(g);
             if (line.contains("то не")) {

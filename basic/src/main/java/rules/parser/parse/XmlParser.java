@@ -1,9 +1,9 @@
 package rules.parser.parse;
 
+import model.entities.Fact;
 import model.entities.Gate;
 import model.entities.Root;
 import model.entities.Rule;
-import model.entities.State;
 import model.entities.utils.GateUtils;
 import rules.parser.utils.Constants;
 import rules.validation.Validator;
@@ -55,8 +55,8 @@ public class XmlParser {
     private static Set<Gate> getGates(Root root) {
         Set<Gate> gates = new HashSet<>();
         for (Rule rule : root.getRules()) {
-            List<State> preconditions = rule.getInputs();
-            State action = rule.getOutput();
+            List<Fact> preconditions = rule.getInputs();
+            Fact action = rule.getOutput();
             Gate g = GateUtils.getGate(preconditions, action);
             g.setRuleId(rule.getIndex());
             gates.add(g);

@@ -1,8 +1,8 @@
 package model.entities.impl;
 
 import model.entities.Algebra;
+import model.entities.Fact;
 import model.entities.Gate;
-import model.entities.State;
 
 /**
  * T6 alphabet using for Podem algorithm.
@@ -25,12 +25,12 @@ public enum Value implements Algebra {
         }
 
         @Override
-        public State getEasiestInput(Gate gate) {
+        public Fact getEasiestInput(Gate gate) {
             return gate.getEasierPathCC0();
         }
 
         @Override
-        public State getHardestInput(Gate gate) {
+        public Fact getHardestInput(Gate gate) {
             return gate.getHardestPathCC0();
         }
     },
@@ -55,12 +55,12 @@ public enum Value implements Algebra {
         }
 
         @Override
-        public State getEasiestInput(Gate gate) {
+        public Fact getEasiestInput(Gate gate) {
             return gate.getEasierPathCC1();
         }
 
         @Override
-        public State getHardestInput(Gate gate) {
+        public Fact getHardestInput(Gate gate) {
             return gate.getHardestPathCC1();
         }
     },
@@ -92,12 +92,12 @@ public enum Value implements Algebra {
         }
 
         @Override
-        public State getEasiestInput(Gate gate) {
+        public Fact getEasiestInput(Gate gate) {
             return null;
         }
 
         @Override
-        public State getHardestInput(Gate gate) {
+        public Fact getHardestInput(Gate gate) {
             return null;
         }
     },
@@ -129,12 +129,12 @@ public enum Value implements Algebra {
         }
 
         @Override
-        public State getEasiestInput(Gate gate) {
+        public Fact getEasiestInput(Gate gate) {
             return null;
         }
 
         @Override
-        public State getHardestInput(Gate gate) {
+        public Fact getHardestInput(Gate gate) {
             return null;
         }
     },
@@ -156,12 +156,12 @@ public enum Value implements Algebra {
         }
 
         @Override
-        public State getEasiestInput(Gate gate) {
+        public Fact getEasiestInput(Gate gate) {
             return null;
         }
 
         @Override
-        public State getHardestInput(Gate gate) {
+        public Fact getHardestInput(Gate gate) {
             return null;
         }
     }

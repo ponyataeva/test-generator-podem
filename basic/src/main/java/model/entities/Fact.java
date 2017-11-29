@@ -14,7 +14,7 @@ import java.util.TreeSet;
  * The preconditions or Action type.
  */
 @XmlRootElement
-public class State extends XmlBaseObject implements Comparable {
+public class Fact extends XmlBaseObject implements Comparable {
 
     private Value value = Value.X;
     private FaultValueImpl faultType = FaultValueImpl.NONE;
@@ -28,10 +28,10 @@ public class State extends XmlBaseObject implements Comparable {
 
     private boolean alternateAssignmentTried;
 
-    public State() {
+    public Fact() {
     }
 
-    public State(String name) {
+    public Fact(String name) {
         this.name = name;
     }
 
@@ -120,19 +120,19 @@ public class State extends XmlBaseObject implements Comparable {
 
     @Override
     public int compareTo(Object o) {
-        return index.compareTo(((State) o).getIndex());
+        return index.compareTo(((Fact) o).getIndex());
     }
 
     public boolean equals(Object rule) {
-        if (rule instanceof State) {
-            return name.equals(((State) rule).getName()) && index.equals(((State) rule).getIndex());
+        if (rule instanceof Fact) {
+            return name.equals(((Fact) rule).getName()) && index.equals(((Fact) rule).getIndex());
         } else {
             return super.equals(rule);
         }
     }
 
     public boolean inversionOf(Object o) {
-        return o instanceof State && this.name.equals(((State) o).getName());
+        return o instanceof Fact && this.name.equals(((Fact) o).getName());
     }
 
     public int hashCode() {

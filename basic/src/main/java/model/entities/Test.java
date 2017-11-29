@@ -18,8 +18,8 @@ public class Test {
         PIValues = new HashMap<>();
     }
 
-    public void addPIs(List<State> states) {
-        for (State pi : states) {
+    public void addPIs(List<Fact> facts) {
+        for (Fact pi : facts) {
             PIValues.put(pi.getName(), pi.getValue());
         }
     }

@@ -13,7 +13,7 @@ public interface Algebra {
 
     Value not();
 
-    State getEasiestInput(Gate gate);
+    Fact getEasiestInput(Gate gate);
 
-    State getHardestInput(Gate gate);
+    Fact getHardestInput(Gate gate);
 }

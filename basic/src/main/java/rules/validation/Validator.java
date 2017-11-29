@@ -2,7 +2,7 @@ package rules.validation;
 
 import model.entities.Root;
 import model.entities.Rule;
-import model.entities.State;
+import model.entities.Fact;
 import rules.parser.utils.XMLValidationException;
 
 import java.util.List;
@@ -47,14 +47,14 @@ public class Validator {
      *
      * @param facts dirty list of facts.
      */
-    private void validateFacts(List<State> facts) {
+    private void validateFacts(List<Fact> facts) {
         StringBuilder args = new StringBuilder("");
         for (int i = 0; i < facts.size(); i++) {
-            State fact = facts.get(i);
+            Fact fact = facts.get(i);
             StringBuilder duplicatesList = new StringBuilder("");
 
             for (int j = i + 1; j < facts.size(); j++) {
-                State duplicate = facts.get(j);
+                Fact duplicate = facts.get(j);
                 boolean isEqualName = fact.getName().equals(duplicate.getName());
                 if (isEqualName) {
                     duplicatesList.append(duplicate.toString());
@@ -101,8 +101,8 @@ public class Validator {
     }
 
     private static void validateDuplicateInRules(Rule rule) {
-        State out = rule.getOutput();
-        for (State fact : rule.getInputs()) {
+        Fact out = rule.getOutput();
+        for (Fact fact : rule.getInputs()) {
             if (out.equals(fact)) {
                 if (rule.isNegation()) {
                     throw new XMLValidationException(format(INVERSIONS_FOUND, fact.toString(), rule.toString()));

@@ -1,7 +1,7 @@
 package rule.utils;
 
+import model.entities.Fact;
 import model.entities.Gate;
-import model.entities.State;
 
 import java.util.HashSet;
 import java.util.List;
@@ -21,17 +21,17 @@ public class ArrayHelper {
      * @return adjacency matrix
      */
     public static int[][] toArray(List<Gate> gates) {
-        Set<State> allStates = new HashSet<>();
+        Set<Fact> allFacts = new HashSet<>();
         for (Gate gate : gates) {
-            allStates.addAll(gate.getInputs());
-            allStates.add(gate.getOutput());
+            allFacts.addAll(gate.getInputs());
+            allFacts.add(gate.getOutput());
         }
-        int[][] result = new int[allStates.size()][allStates.size()];
+        int[][] result = new int[allFacts.size()][allFacts.size()];
 
         for (Gate gate : gates) {
             int destinationIndex = gate.getOutput().getIndex();
-            for (State state : gate.getInputs()) {
-                result[state.getIndex()][destinationIndex] = 1;
+            for (Fact fact : gate.getInputs()) {
+                result[fact.getIndex()][destinationIndex] = 1;
             }
         }
         return result;

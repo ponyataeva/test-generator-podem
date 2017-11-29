@@ -35,7 +35,7 @@ public class FileReader {
 //
 //        for (int i = 1; i <= rulesSheet.getLastRowNum(); i++) {
 //            XSSFRow row = rulesSheet.getRow(i);
-//            Set<State> preconditions = new HashSet<>();
+//            Set<Fact> preconditions = new HashSet<>();
 //            for (int j = 2; j < row.getLastCellNum(); j++) {
 //                XSSFCell cell = row.getCell(j);
 //                String cellValue = getCellValue(cell);
@@ -43,7 +43,7 @@ public class FileReader {
 //                    preconditions.add(StateUtils.createState(cellValue));
 //                } else {
 //                    cell = row.getCell(j + 1);
-//                    State action = StateUtils.createState(getCellValue(cell));
+//                    Fact action = StateUtils.createState(getCellValue(cell));
 //                    rules.add(new Gate(preconditions, action));
 //                    break;
 //                }

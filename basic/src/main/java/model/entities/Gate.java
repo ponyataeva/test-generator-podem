@@ -10,44 +10,44 @@ import java.util.*;
  */
 public class Gate implements Comparable<Gate> {
 
-    private SortedSet<State> inputs;
-    private State output;
+    private SortedSet<Fact> inputs;
+    private Fact output;
     private Operation operation = OperationImpl.AND;
     private int index;
     private Integer ruleId;
 
-    public Gate(SortedSet<State> inputs, State output) {
+    public Gate(SortedSet<Fact> inputs, Fact output) {
         this.inputs = inputs;
         this.output = output;
     }
 
-    public void addInputs(SortedSet<State> inputs) {
+    public void addInputs(SortedSet<Fact> inputs) {
         this.inputs.addAll(inputs);
     }
 
-    public Set<State> getInputs() {
+    public Set<Fact> getInputs() {
         return inputs;
     }
 
-    public State getOutput() {
+    public Fact getOutput() {
         return output;
     }
 
-    public boolean containsInput(State state) {
-        for (State ruleState : inputs) {
-            if (ruleState.equals(state)) {
+    public boolean containsInput(Fact fact) {
+        for (Fact ruleFact : inputs) {
+            if (ruleFact.equals(fact)) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean containsOutput(State state) {
-        return output.equals(state);
+    public boolean containsOutput(Fact fact) {
+        return output.equals(fact);
     }
 
     public boolean hasDInput() {
-        for (State input : inputs) {
+        for (Fact input : inputs) {
             if (input.getValue().equals(Value.D) ||
                     input.getValue().equals(Value.NOT_D)) {
                 return true;
@@ -57,8 +57,8 @@ public class Gate implements Comparable<Gate> {
     }
 
     private boolean isAllInputsAssigned() {
-        for (State state : inputs) {
-            if (state.isUnassigned()) {
+        for (Fact fact : inputs) {
+            if (fact.isUnassigned()) {
                 return false;
             }
         }
@@ -74,7 +74,7 @@ public class Gate implements Comparable<Gate> {
         }
 
         List<Value> values = new ArrayList<>();
-        for (State input : inputs) {
+        for (Fact input : inputs) {
             values.add(input.getValue());
         }
 
@@ -91,16 +91,16 @@ public class Gate implements Comparable<Gate> {
     }
 
     public int calculateCC0() {
-        return operation.calculateCC0(inputs.toArray(new State[inputs.size()]));
+        return operation.calculateCC0(inputs.toArray(new Fact[inputs.size()]));
     }
 
     public int calculateCC1() {
-        return operation.calculateCC1(inputs.toArray(new State[inputs.size()]));
+        return operation.calculateCC1(inputs.toArray(new Fact[inputs.size()]));
     }
 
-    public State getEasierPathCC0() {
-        State result = null;
-        for (State input : inputs) {
+    public Fact getEasierPathCC0() {
+        Fact result = null;
+        for (Fact input : inputs) {
             if ((result == null || input.getCC0() < result.getCC0()) && isUnassignedPI(input)) {
                 result = input;
             }
@@ -108,9 +108,9 @@ public class Gate implements Comparable<Gate> {
         return result;
     }
 
-    public State getEasierPathCC1() {
-        State result = null;
-        for (State input : inputs) {
+    public Fact getEasierPathCC1() {
+        Fact result = null;
+        for (Fact input : inputs) {
             if (result == null || input.getCC1() < result.getCC1() && isUnassignedPI(input)) {
                 result = input;
             }
@@ -118,9 +118,9 @@ public class Gate implements Comparable<Gate> {
         return result;
     }
 
-    public State getHardestPathCC0() {
-        State result = null;
-        for (State input : inputs) {
+    public Fact getHardestPathCC0() {
+        Fact result = null;
+        for (Fact input : inputs) {
             if ((result == null || input.getCC0() > result.getCC0()) && isUnassignedPI(input)) {
                 result = input;
             }
@@ -128,9 +128,9 @@ public class Gate implements Comparable<Gate> {
         return result;
     }
 
-    public State getHardestPathCC1() {
-        State result = null;
-        for (State input : inputs) {
+    public Fact getHardestPathCC1() {
+        Fact result = null;
+        for (Fact input : inputs) {
             if ((result == null || input.getCC1() > result.getCC1()) && isUnassignedPI(input)) {
                 result = input;
             }
@@ -138,8 +138,8 @@ public class Gate implements Comparable<Gate> {
         return result;
     }
 
-    private boolean isUnassignedPI(State state) {
-        return state.isPrimaryInput() && (state.isUnassigned() || state.isAlternateAssignment());
+    private boolean isUnassignedPI(Fact fact) {
+        return fact.isPrimaryInput() && (fact.isUnassigned() || fact.isAlternateAssignment());
     }
 
     public boolean hasNonControllingValue() {

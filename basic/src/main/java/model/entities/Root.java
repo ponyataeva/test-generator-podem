@@ -11,25 +11,25 @@ import java.util.*;
 @XmlRootElement
 public class Root {
 
-    private StatesList statesList;
+    private FactsList factsList;
     private RulesList rulesList;
 
-    private Map<Integer, State> statesMap = new HashMap<>();
+    private Map<Integer, Fact> statesMap = new HashMap<>();
 
     @XmlElement(name = "facts")
-    public StatesList getStatesList() {
-        return statesList;
+    public FactsList getFactsList() {
+        return factsList;
     }
 
-    public List<State> getStates() {
-        return statesList.getStates();
+    public List<Fact> getStates() {
+        return factsList.getFacts();
     }
 
-    public void setStatesList(StatesList statesList) {
-        this.statesList = statesList;
+    public void setFactsList(FactsList factsList) {
+        this.factsList = factsList;
 
-        for (State state : statesList.getStates()) {
-            statesMap.put(state.getIndex(), state);
+        for (Fact fact : factsList.getFacts()) {
+            statesMap.put(fact.getIndex(), fact);
         }
     }
 
@@ -40,9 +40,9 @@ public class Root {
 
     public void setRulesList(RulesList rulesList) {
         for (Rule rule : rulesList.getRules()) {
-            List<State> inputs = new ArrayList<>();
-            for (State state : rule.getInputs()) {
-                Integer index = Integer.parseInt(state.getName());
+            List<Fact> inputs = new ArrayList<>();
+            for (Fact fact : rule.getInputs()) {
+                Integer index = Integer.parseInt(fact.getName());
                 inputs.add(statesMap.get(index));
             }
             rule.setInputs(inputs);
@@ -59,23 +59,23 @@ public class Root {
     }
 
     @XmlRootElement
-    public static class StatesList {
+    public static class FactsList {
 
-        private List<State> states;
+        private List<Fact> facts;
 
-        public void setStates(List<State> states) {
-            this.states = states;
+        public void setFacts(List<Fact> facts) {
+            this.facts = facts;
         }
 
         @XmlElement(name = "fact")
-        List<State> getStates() {
-            return states;
+        List<Fact> getFacts() {
+            return facts;
         }
 
         @Override
         public String toString() {
-            return "\nStatesList{" +
-                    "states=" + states +
+            return "\nFactsList{" +
+                    "facts=" + facts +
                     '}';
         }
     }
@@ -105,7 +105,7 @@ public class Root {
     @Override
     public String toString() {
         return "Root{" +
-                "statesList=" + statesList +
+                "factsList=" + factsList +
                 "\nrulesList=" + rulesList +
                 '}';
     }

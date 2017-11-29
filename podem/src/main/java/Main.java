@@ -9,10 +9,10 @@ public class Main {
 //        Scheme scheme = new Scheme(gates);
 ////        System.out.println(scheme.toString());
 //
-//        StateUtils.getState("K").setFaultType(FaultValueImpl.sa0);
-////        StateUtils.getState("G").setValue(Value.NOT_D);
-//        PodemExecutor executer = new PodemExecutor(scheme, StateUtils.getState("K"));
-////        System.out.println(StateUtils.getAllStates());
+//        StateUtils.getFact("K").setFaultType(FaultValueImpl.sa0);
+////        StateUtils.getFact("G").setValue(Value.NOT_D);
+//        PodemExecutor executer = new PodemExecutor(scheme, StateUtils.getFact("K"));
+////        System.out.println(StateUtils.getAllFacts());
 //        executer.execute();
 //        System.out.println(scheme.getTest());
 //    }

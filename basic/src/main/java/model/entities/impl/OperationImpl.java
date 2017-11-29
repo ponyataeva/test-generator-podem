@@ -1,7 +1,7 @@
 package model.entities.impl;
 
 import model.entities.Operation;
-import model.entities.State;
+import model.entities.Fact;
 
 import java.util.Iterator;
 import java.util.List;
@@ -49,18 +49,18 @@ public enum OperationImpl implements Operation {
         }
 
         @Override
-        public int calculateCC0(State... vales) {
+        public int calculateCC0(Fact... vales) {
             int min = Integer.MAX_VALUE;
-            for (State v : vales) {
+            for (Fact v : vales) {
                 min = Math.min(min, v.getCC0());
             }
             return ++min;
         }
 
         @Override
-        public int calculateCC1(State... values) {
+        public int calculateCC1(Fact... values) {
             int sum = 0;
-            for (State v : values) {
+            for (Fact v : values) {
                 sum = sum + v.getCC1();
             }
             return ++sum;
@@ -104,18 +104,18 @@ public enum OperationImpl implements Operation {
         }
 
         @Override
-        public int calculateCC0(State... vales) {
+        public int calculateCC0(Fact... vales) {
             int sum = 0;
-            for (State v : vales) {
+            for (Fact v : vales) {
                 sum = sum + v.getCC1();
             }
             return sum + 1;
         }
 
         @Override
-        public int calculateCC1(State... values) {
+        public int calculateCC1(Fact... values) {
             int min = Integer.MAX_VALUE;
-            for (State v : values) {
+            for (Fact v : values) {
                 min = Math.min(min, v.getCC0());
             }
             return ++min;
@@ -159,12 +159,12 @@ public enum OperationImpl implements Operation {
 //        }
 //
 //        @Override
-//        public int calculateCC0(State... vales) {
+//        public int calculateCC0(Fact... vales) {
 //            return 0;
 //        }
 //
 //        @Override
-//        public int calculateCC1(State... values) {
+//        public int calculateCC1(Fact... values) {
 //            return 0;
 //        }
 //    }

@@ -10,25 +10,25 @@ import java.util.List;
 @XmlRootElement
 public class Rule extends XmlBaseObject {
 
-    private List<State> inputs;
-    private State output;
+    private List<Fact> inputs;
+    private Fact output;
     private boolean isNegation;
 
     @XmlElement(name = "input")
-    public List<State> getInputs() {
+    public List<Fact> getInputs() {
         return inputs;
     }
 
-    public void setInputs(List<State> inputs) {
+    public void setInputs(List<Fact> inputs) {
         this.inputs = inputs;
     }
 
     @XmlElement
-    public State getOutput() {
+    public Fact getOutput() {
         return output;
     }
 
-    public void setOutput(State output) {
+    public void setOutput(Fact output) {
         this.output = output;
     }
 

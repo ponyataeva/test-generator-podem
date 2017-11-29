@@ -5,17 +5,17 @@ package model.entities;
  */
 public class Fault {
 
-    private State state;
+    private Fact fact;
 
-    public Fault(State state) {
-        this.state = state;
+    public Fault(Fact fact) {
+        this.fact = fact;
     }
 
-    public State getState() {
-        return state;
+    public Fact getFact() {
+        return fact;
     }
 
-    public void setState(State state) {
-        this.state = state;
+    public void setFact(Fact fact) {
+        this.fact = fact;
     }
 }

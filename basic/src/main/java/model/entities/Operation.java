@@ -19,7 +19,7 @@ public interface Operation {
 
     Value getNonControllingValue();
 
-    int calculateCC0(State... values);
+    int calculateCC0(Fact... values);
 
-    int calculateCC1(State... values);
+    int calculateCC1(Fact... values);
 }

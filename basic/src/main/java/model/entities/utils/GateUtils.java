@@ -1,7 +1,7 @@
 package model.entities.utils;
 
+import model.entities.Fact;
 import model.entities.Gate;
-import model.entities.State;
 
 import java.util.*;
 
@@ -13,7 +13,7 @@ public class GateUtils {
     private static Set<Gate> allGates = new HashSet<>();
     private static int currentGateIndex = 0;
 
-    public static Gate getGate(SortedSet<State> inputs, State output) {
+    public static Gate getGate(SortedSet<Fact> inputs, Fact output) {
         for (Gate gate : allGates) {
             if (gate.getOutput().equals(output)) {
                 gate.addInputs(inputs);
@@ -34,8 +34,8 @@ public class GateUtils {
     }
 
 
-    public static Gate getGate(List<State> inputs, State output) {
-        SortedSet<State> set = new TreeSet<>(inputs);
+    public static Gate getGate(List<Fact> inputs, Fact output) {
+        SortedSet<Fact> set = new TreeSet<>(inputs);
         for (Gate gate : allGates) {
             if (gate.getOutput().equals(output)) {
                 gate.addInputs(set);
@@ -55,8 +55,8 @@ public class GateUtils {
         return resultGate;
     }
 
-    private static void addIsInputFor(Set<State> inputs, Gate gate) {
-        for (State input : inputs) {
+    private static void addIsInputFor(Set<Fact> inputs, Gate gate) {
+        for (Fact input : inputs) {
             input.addIsInputFor(gate);
         }
     }

@@ -1,6 +1,6 @@
 package model.entities.utils;
 
-import model.entities.State;
+import model.entities.Fact;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Utils class for State objects.
+ * Utils class for Fact objects.
  */
 public class StateUtils {
 
-    private static Set<State> allStates = new HashSet<>();
+    private static Set<Fact> allFacts = new HashSet<>();
     private static int currentStateIndex = 0;
 
     /**
@@ -24,49 +24,49 @@ public class StateUtils {
      * @param stateName - name of the state
      * @return the state object with setting index.
      */
-    public static State getState(String stateName) {
-        State resultState = new State(stateName);
-        for (State state : allStates) {
-            if (state.equals(resultState)) {
-                return state;
+    public static Fact getState(String stateName) {
+        Fact resultFact = new Fact(stateName);
+        for (Fact fact : allFacts) {
+            if (fact.equals(resultFact)) {
+                return fact;
             }
         }
-        resultState.setIndex(currentStateIndex);
-        allStates.add(resultState);
+        resultFact.setIndex(currentStateIndex);
+        allFacts.add(resultFact);
         currentStateIndex++;
 
-        return resultState;
+        return resultFact;
     }
 
-    public static State getState(int index) {
-        for (State state : allStates) {
-            if (state.getIndex().equals(index)) {
-                return state;
+    public static Fact getState(int index) {
+        for (Fact fact : allFacts) {
+            if (fact.getIndex().equals(index)) {
+                return fact;
             }
         }
         return null;
     }
 
-    public static List<State> getInputs(int[][] matrix) {
-        List<State> states = new ArrayList<>();
+    public static List<Fact> getInputs(int[][] matrix) {
+        List<Fact> facts = new ArrayList<>();
         for (int i = 0; i < matrix.length; i++) {
             if (isInput(matrix, i)) {
-                State state = getState(i);
-                states.add(state);
+                Fact fact = getState(i);
+                facts.add(fact);
             }
         }
-        return states;
+        return facts;
     }
 
-    public static List<State> getOutputs(int[][] matrix) {
-        List<State> states = new ArrayList<>();
+    public static List<Fact> getOutputs(int[][] matrix) {
+        List<Fact> facts = new ArrayList<>();
         for (int i = 0; i < matrix.length; i++) {
             if (isOutput(matrix[i])) {
-                State state = getState(i);
-                states.add(state);
+                Fact fact = getState(i);
+                facts.add(fact);
             }
         }
-        return states;
+        return facts;
     }
 
     /**
@@ -75,15 +75,15 @@ public class StateUtils {
      * @param stateIndex
      * @return
      */
-    public static List<State> getInputs(int[][] matrix, int stateIndex) {
-        List<State> states = new ArrayList<>();
+    public static List<Fact> getInputs(int[][] matrix, int stateIndex) {
+        List<Fact> facts = new ArrayList<>();
         for (int i = 0; i < matrix.length; i++) {
             if (1 == matrix[i][stateIndex]) {
-                State state = getState(i);
-                states.add(state);
+                Fact fact = getState(i);
+                facts.add(fact);
             }
         }
-        return states;
+        return facts;
     }
 
     /**
@@ -93,15 +93,15 @@ public class StateUtils {
      * @param stateIndex
      * @return
      */
-    public static List<State> getOutputs(int[][] matrix, int stateIndex) {
-        List<State> states = new ArrayList<>();
+    public static List<Fact> getOutputs(int[][] matrix, int stateIndex) {
+        List<Fact> facts = new ArrayList<>();
         for (int i = 0; i < matrix.length; i++) {
             if (1 == matrix[stateIndex][i]) {
-                State state = getState(i);
-                states.add(state);
+                Fact fact = getState(i);
+                facts.add(fact);
             }
         }
-        return states;
+        return facts;
     }
 
     private static boolean isOutput(int[] stateEdges) {
@@ -122,7 +122,7 @@ public class StateUtils {
         return true;
     }
 
-    public static Set<State> getAllStates() {
-        return allStates;
+    public static Set<Fact> getAllFacts() {
+        return allFacts;
     }
 }
