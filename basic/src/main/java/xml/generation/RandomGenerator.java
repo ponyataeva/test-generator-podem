@@ -1,21 +1,16 @@
 package xml.generation;
 
 import com.google.common.collect.ImmutableList;
-import com.stratumsoft.xmlgen.DefaultValues;
-import com.stratumsoft.xmlgen.SchemaTypeXmlGenerator;
-import com.stratumsoft.xmlgen.XmlGenOptions;
 import model.entities.Fact;
 import model.entities.Root;
 import model.entities.Rule;
-import org.apache.ws.commons.schema.XmlSchema;
-import org.apache.ws.commons.schema.XmlSchemaCollection;
+import util.RandomString;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.namespace.QName;
-import javax.xml.transform.stream.StreamSource;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,33 +23,34 @@ import java.util.List;
 public class RandomGenerator {
 
     private static final String TMP_DIR = "basic/src/main/resources/tmp";
+    private static final RandomString RANDOM_STRING = new RandomString();
 
-    public void generate() throws IOException {
-        prepareTmpDir();
-
-        String path = "basic/src/main/resources/knowledge_base.xsd";
-        File file = new File(path);
-        InputStream is = new FileInputStream(file);
-
-        XmlSchemaCollection coll = new XmlSchemaCollection();
-        coll.setBaseUri(file.toString());
-
-        StreamSource source = new StreamSource(is);
-        XmlSchema schema = coll.read(source);
-
-        XmlGenOptions options = new XmlGenOptions();
-        options.setMaxRecursiveDepth(1);
-        options.setMaxRepeatingElements(1);
-        options.setGenOptionalElements(true);
-        options.setDefVals(DefaultValues.DEFAULT);
-        SchemaTypeXmlGenerator generator = new SchemaTypeXmlGenerator(coll, options);
-        boolean isPretty = true;
-//        System.out.println(generator.generateXml(new QName("root"), isPretty));
-
-        PrintWriter writer = new PrintWriter(TMP_DIR + "/tmp_" + new Date().getTime() + ".xml", "UTF-8");
-        writer.println(generator.generateXml(new QName("root"), isPretty));
-        writer.close();
-    }
+//    public void generate() throws IOException {
+//        prepareTmpDir();
+//
+//        String path = "basic/src/main/resources/knowledge_base.xsd";
+//        File file = new File(path);
+//        InputStream is = new FileInputStream(file);
+//
+//        XmlSchemaCollection coll = new XmlSchemaCollection();
+//        coll.setBaseUri(file.toString());
+//
+//        StreamSource source = new StreamSource(is);
+//        XmlSchema schema = coll.read(source);
+//
+//        XmlGenOptions options = new XmlGenOptions();
+//        options.setMaxRecursiveDepth(1);
+//        options.setMaxRepeatingElements(1);
+//        options.setGenOptionalElements(true);
+//        options.setDefVals(DefaultValues.DEFAULT);
+//        SchemaTypeXmlGenerator generator = new SchemaTypeXmlGenerator(coll, options);
+//        boolean isPretty = true;
+////        System.out.println(generator.generateXml(new QName("root"), isPretty));
+//
+//        PrintWriter writer = new PrintWriter(TMP_DIR + "/tmp_" + new Date().getTime() + ".xml", "UTF-8");
+//        writer.println(generator.generateXml(new QName("root"), isPretty));
+//        writer.close();
+//    }
 
     public static void main(String[] args) throws IOException {
         prepareTmpDir();
@@ -99,7 +95,7 @@ public class RandomGenerator {
         for (int i = 1; i < 10; i++) {
             Fact fact = new Fact();
             fact.setIndex(i);
-            fact.setName(String.valueOf(i));
+            fact.setName(RANDOM_STRING.nextString());
             input.add(fact);
         }
         return input;
