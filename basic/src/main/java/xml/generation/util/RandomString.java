@@ -1,4 +1,4 @@
-package util;
+package xml.generation.util;
 
 import java.security.SecureRandom;
 import java.util.Locale;

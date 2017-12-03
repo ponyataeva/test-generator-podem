@@ -4,7 +4,7 @@ import model.dto.Fact;
 import model.dto.Root;
 import model.dto.Rule;
 import model.dto.XmlBaseObject;
-import util.RandomString;
+import xml.generation.util.RandomString;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
