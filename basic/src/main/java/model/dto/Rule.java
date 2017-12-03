@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 /**
- * Created by Екатерина on 03.12.2017.
+ * Dto of Rule object
  */
 @XmlRootElement
 public class Rule extends XmlBaseObject {

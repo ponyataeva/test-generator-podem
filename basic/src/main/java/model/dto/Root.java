@@ -29,6 +29,10 @@ public class Root {
         this.rulesList = rulesList;
     }
 
+    public List<XmlBaseObject> getFacts() {
+        return factsList.getFacts();
+    }
+
     public List<Rule> getRules() {
         return rulesList.getRules();
     }
@@ -60,7 +64,7 @@ public class Root {
 
         private List<Rule> rules;
 
-        public List<Rule> getRules() {
+        List<Rule> getRules() {
             return rules;
         }
 

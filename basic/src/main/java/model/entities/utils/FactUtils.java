@@ -10,35 +10,35 @@ import java.util.Set;
 /**
  * Utils class for Fact objects.
  */
-public class StateUtils {
+public class FactUtils {
 
     private static Set<Fact> allFacts = new HashSet<>();
-    private static int currentStateIndex = 0;
+    private static int currentFactIndex = 0;
 
     /**
-     * Multitone for the state objects.
+     * Multitone for the fact objects.
      * <p>
      * Find by the name object. If object already exists return it.
      * else create new object and set index to it.
      *
-     * @param stateName - name of the state
-     * @return the state object with setting index.
+     * @param factName - name of the fact
+     * @return the fact object with index.
      */
-    public static Fact getState(String stateName) {
-        Fact resultFact = new Fact(stateName);
+    public static Fact getFact(String factName) {
+        Fact resultFact = new Fact(factName);
         for (Fact fact : allFacts) {
             if (fact.equals(resultFact)) {
                 return fact;
             }
         }
-        resultFact.setIndex(currentStateIndex);
+        resultFact.setIndex(currentFactIndex);
         allFacts.add(resultFact);
-        currentStateIndex++;
+        currentFactIndex++;
 
         return resultFact;
     }
 
-    public static Fact getState(int index) {
+    public static Fact getFact(int index) {
         for (Fact fact : allFacts) {
             if (fact.getIndex().equals(index)) {
                 return fact;
@@ -51,7 +51,7 @@ public class StateUtils {
         List<Fact> facts = new ArrayList<>();
         for (int i = 0; i < matrix.length; i++) {
             if (isInput(matrix, i)) {
-                Fact fact = getState(i);
+                Fact fact = getFact(i);
                 facts.add(fact);
             }
         }
@@ -62,7 +62,7 @@ public class StateUtils {
         List<Fact> facts = new ArrayList<>();
         for (int i = 0; i < matrix.length; i++) {
             if (isOutput(matrix[i])) {
-                Fact fact = getState(i);
+                Fact fact = getFact(i);
                 facts.add(fact);
             }
         }
@@ -79,7 +79,7 @@ public class StateUtils {
         List<Fact> facts = new ArrayList<>();
         for (int i = 0; i < matrix.length; i++) {
             if (1 == matrix[i][stateIndex]) {
-                Fact fact = getState(i);
+                Fact fact = getFact(i);
                 facts.add(fact);
             }
         }
@@ -97,7 +97,7 @@ public class StateUtils {
         List<Fact> facts = new ArrayList<>();
         for (int i = 0; i < matrix.length; i++) {
             if (1 == matrix[stateIndex][i]) {
-                Fact fact = getState(i);
+                Fact fact = getFact(i);
                 facts.add(fact);
             }
         }

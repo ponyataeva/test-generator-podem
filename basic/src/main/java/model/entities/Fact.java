@@ -3,18 +3,14 @@ package model.entities;
 import model.entities.impl.FaultValueImpl;
 import model.entities.impl.Value;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * The preconditions or Action type.
+ * The preconditions of Action type.
  */
-@XmlRootElement
-public class Fact extends XmlBaseObject implements Comparable {
+public class Fact extends BaseObject implements Comparable {
 
     private Value value = Value.X;
     private FaultValueImpl faultType = FaultValueImpl.NONE;
@@ -23,7 +19,6 @@ public class Fact extends XmlBaseObject implements Comparable {
     private int CC0 = 1;
     private int CC1 = 1;
 
-    @XmlAttribute(name = "isNegation")
     private boolean isNegation;
 
     private boolean alternateAssignmentTried;
@@ -35,7 +30,6 @@ public class Fact extends XmlBaseObject implements Comparable {
         this.name = name;
     }
 
-    @XmlTransient
     public Value getValue() {
         return value;
     }
@@ -69,8 +63,6 @@ public class Fact extends XmlBaseObject implements Comparable {
         this.isOutputFor.add(gate);
     }
 
-
-    @XmlTransient
     public FaultValueImpl getFaultType() {
         return faultType;
     }
@@ -87,7 +79,6 @@ public class Fact extends XmlBaseObject implements Comparable {
         return isInputFor.isEmpty();
     }
 
-    @XmlTransient
     public int getCC0() {
         return CC0;
     }
@@ -96,8 +87,6 @@ public class Fact extends XmlBaseObject implements Comparable {
         this.CC0 = CC0;
     }
 
-
-    @XmlTransient
     public int getCC1() {
         return CC1;
     }
@@ -123,11 +112,11 @@ public class Fact extends XmlBaseObject implements Comparable {
         return index.compareTo(((Fact) o).getIndex());
     }
 
-    public boolean equals(Object rule) {
-        if (rule instanceof Fact) {
-            return name.equals(((Fact) rule).getName()) && index.equals(((Fact) rule).getIndex());
+    public boolean equals(Object fact) {
+        if (fact instanceof Fact) {
+            return name.equals(((Fact) fact).getName()) && index.equals(((Fact) fact).getIndex());
         } else {
-            return super.equals(rule);
+            return super.equals(fact);
         }
     }
 
@@ -148,6 +137,6 @@ public class Fact extends XmlBaseObject implements Comparable {
     }
 
     public String toString() {
-        return String.format("(%s) %s", index, name);
+        return String.format("(%s)%s %s", index, isNegation ? "(negation)" : "", name);
     }
 }

@@ -1,20 +1,16 @@
 package model.entities;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 /**
  * Add class description
  */
-@XmlRootElement
-public class Rule extends XmlBaseObject {
+public class Rule extends BaseObject {
 
     private List<Fact> inputs;
     private Fact output;
     private boolean isNegation;
 
-    @XmlElement(name = "input")
     public List<Fact> getInputs() {
         return inputs;
     }
@@ -23,7 +19,6 @@ public class Rule extends XmlBaseObject {
         this.inputs = inputs;
     }
 
-    @XmlElement
     public Fact getOutput() {
         return output;
     }

@@ -1,6 +1,9 @@
 package rules.validation;
 
-import model.entities.Root;
+import model.dto.Root;
+import org.junit.Before;
+import org.junit.Test;
+import rules.parser.utils.XMLValidationException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -9,10 +12,10 @@ import java.io.File;
 
 public class ValidatorTest {
 
-    private static final File TEST_1_FILE = new File("basic/src/test/resources/test_1.xml");
-    private static final File TEST_2_FILE = new File("basic/src/test/resources/test_2.xml");
-    private static final File TEST_3_FILE = new File("basic/src/test/resources/test_3.xml");
-    private static final File TEST_4_FILE = new File("basic/src/test/resources/test_4.xml");
+    private static final File TEST_1_FILE = new File("src/test/resources/test_1.xml");
+    private static final File TEST_2_FILE = new File("src/test/resources/test_2.xml");
+    private static final File TEST_3_FILE = new File("src/test/resources/test_3.xml");
+    private static final File TEST_4_FILE = new File("src/test/resources/test_4.xml");
     private static JAXBContext jaxbContext;
 
     private Root test1;
@@ -20,7 +23,7 @@ public class ValidatorTest {
     private Root test3;
     private Root test4;
 
-//    @Before
+    @Before
     public void loadTestFiles() throws JAXBException {
         Unmarshaller jaxbUnmarshaller = getJaxbContext().createUnmarshaller();
         this.test1 = (Root) jaxbUnmarshaller.unmarshal(TEST_1_FILE);
@@ -40,7 +43,7 @@ public class ValidatorTest {
         return jaxbContext;
     }
 
-//    @Test
+    @Test(expected = XMLValidationException.class)
     public void doValidation_success_exceptionDoesntThrows() {
         new Validator(test1).doValidation();
     }

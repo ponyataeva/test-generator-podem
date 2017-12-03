@@ -1,35 +1,42 @@
+import model.entities.Fact;
+import model.entities.Gate;
+import model.entities.Scheme;
+import model.entities.impl.FaultValueImpl;
+import model.entities.utils.FactUtils;
+import rules.parser.parse.XmlParser;
+
+import java.io.IOException;
+import java.util.Set;
+
+import static model.entities.impl.FaultValueImpl.NONE;
+
 public class Main {
-// TODO add static creation of class
+    // TODO add static creation of class
 // TODO and objects can be compared by ==
 // TODO переопределить hashCode везде, где переопределен equals
 //
-//    public static void main(String[] args) throws IOException {
-////        Set<Gate> gates = TextHelper.rules.parser.parse(FileReader.readFile());
-//        Set<Gate> gates = XmlHelper.rules.parser.parse();
-//        Scheme scheme = new Scheme(gates);
-////        System.out.println(scheme.toString());
-//
-//        StateUtils.getFact("K").setFaultType(FaultValueImpl.sa0);
-////        StateUtils.getFact("G").setValue(Value.NOT_D);
-//        PodemExecutor executer = new PodemExecutor(scheme, StateUtils.getFact("K"));
-////        System.out.println(StateUtils.getAllFacts());
-//        executer.execute();
-//        System.out.println(scheme.getTest());
-//    }
+    public static void main(String[] args) throws IOException {
+        Set<Gate> gates = XmlParser.parseDefaultCfg();
+        Scheme scheme = new Scheme(gates);
 
+        FactUtils.getFact("K").setFaultType(FaultValueImpl.sa0);
+//        FactUtils.getFact("G").setValue(Value.NOT_D);
+        PodemExecutor executor = new PodemExecutor(scheme, getFault(gates));
+        executor.execute();
+        System.out.println(scheme.getTest());
+    }
 
-    public static void main(String[] args) {
-
-
-        long sum2 = 0L;
-
-        long startTime2 = System.currentTimeMillis();
-        for (long i = 0; i < Integer.MAX_VALUE; i++) {
-            sum2 += i;
+    private static Fact getFault(Set<Gate> gates) {
+        for (Gate gate : gates) {
+            for (Fact fact : gate.getInputs()) {
+                if (!NONE.equals(fact.getFaultType())) {
+                    return fact;
+                }
+            }
+            if (!NONE.equals(gate.getOutput().getFaultType())) {
+                return gate.getOutput();
+            }
         }
-
-        long stopTime2 = System.currentTimeMillis();
-        long elapsedTime2 = stopTime2 - startTime2;
-        System.out.println(elapsedTime2);
+        return null;
     }
 }

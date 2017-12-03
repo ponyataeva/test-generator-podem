@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
- * Created by Екатерина on 03.12.2017.
+ * Dto of Fact object
  */
 @XmlRootElement
 public class Fact extends XmlBaseObject {

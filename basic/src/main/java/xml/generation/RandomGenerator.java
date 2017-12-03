@@ -1,9 +1,9 @@
 package xml.generation;
 
-import com.google.common.collect.ImmutableList;
-import model.entities.Fact;
-import model.entities.Root;
-import model.entities.Rule;
+import model.dto.Fact;
+import model.dto.Root;
+import model.dto.Rule;
+import model.dto.XmlBaseObject;
 import util.RandomString;
 
 import javax.xml.bind.JAXBContext;
@@ -15,59 +15,40 @@ import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class RandomGenerator {
 
     private static final String TMP_DIR = "basic/src/main/resources/tmp";
     private static final RandomString RANDOM_STRING = new RandomString();
+    private static final Random RANDOM_BOOLEAN = new Random();
+    private static AtomicInteger factSequence = new AtomicInteger();
+    private static AtomicInteger ruleSequence = new AtomicInteger();
+    private static Map<Integer, XmlBaseObject> facts = new HashMap<>();
+    private static Supplier<IntStream> factIterator;
 
-//    public void generate() throws IOException {
-//        prepareTmpDir();
-//
-//        String path = "basic/src/main/resources/knowledge_base.xsd";
-//        File file = new File(path);
-//        InputStream is = new FileInputStream(file);
-//
-//        XmlSchemaCollection coll = new XmlSchemaCollection();
-//        coll.setBaseUri(file.toString());
-//
-//        StreamSource source = new StreamSource(is);
-//        XmlSchema schema = coll.read(source);
-//
-//        XmlGenOptions options = new XmlGenOptions();
-//        options.setMaxRecursiveDepth(1);
-//        options.setMaxRepeatingElements(1);
-//        options.setGenOptionalElements(true);
-//        options.setDefVals(DefaultValues.DEFAULT);
-//        SchemaTypeXmlGenerator generator = new SchemaTypeXmlGenerator(coll, options);
-//        boolean isPretty = true;
-////        System.out.println(generator.generateXml(new QName("root"), isPretty));
-//
-//        PrintWriter writer = new PrintWriter(TMP_DIR + "/tmp_" + new Date().getTime() + ".xml", "UTF-8");
-//        writer.println(generator.generateXml(new QName("root"), isPretty));
-//        writer.close();
-//    }
-
-    public static void main(String[] args) throws IOException {
+    public static void generate(int factCount, int fileCount, int ruleCount) throws IOException {
         prepareTmpDir();
+        generateFactList(factCount);
+        factIterator = () -> new Random().ints(1, facts.size());
+
+        for (int i = 0; i < fileCount; i++) {
+            generateFile(generateRules(ruleCount));
+        }
+    }
+
+    private static Root generateFile(List<Rule> rules) throws IOException {
         Root root = new Root();
         Root.RulesList rulesList = new Root.RulesList();
-        Rule rule = new Rule();
-        Fact input = new Fact();
-        input.setName("1");
-        rule.setInputs(ImmutableList.of(input));
-        Fact out = new Fact();
-        out.setName("1");
-        rule.setOutput(out);
-        rulesList.setRules(ImmutableList.of(rule));
-        root.setRulesList(rulesList);
-        root.setFactsList(getStatesList());
-        try {
 
+        rulesList.setRules(rules);
+        root.setFactsList(getFactsList());
+        root.setRulesList(rulesList);
+        try {
             File file = new File(TMP_DIR + "/tmp_" + new Date().getTime() + ".xml");
             JAXBContext jaxbContext = JAXBContext.newInstance(Root.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
@@ -76,36 +57,58 @@ public class RandomGenerator {
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
             jaxbMarshaller.marshal(root, file);
-            jaxbMarshaller.marshal(root, System.out);
-
         } catch (JAXBException e) {
             e.printStackTrace();
         }
-
+        return root;
     }
 
-    private static Root.FactsList getStatesList() {
+    private static Root.FactsList getFactsList() {
         Root.FactsList factsList = new Root.FactsList();
-        factsList.setFacts(getInputs());
+        factsList.setFacts(facts.values().stream().collect(Collectors.toList()));
         return factsList;
+    }
+
+    private static void generateFactList(int count) {
+        for (int i = 0; i < count; i++) {
+            XmlBaseObject fact = new XmlBaseObject();
+            fact.setId(factSequence.incrementAndGet());
+            fact.setName(RANDOM_STRING.nextString());
+            facts.put(fact.getId(), fact);
+        }
+    }
+
+    private static List<Rule> generateRules(int count) {
+        List<Rule> rules = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            Rule rule = new Rule();
+            rule.setId(ruleSequence.incrementAndGet());
+            rule.setInputs(getInputs());
+            rule.setOutput(getOutput());
+            rules.add(rule);
+        }
+        return rules;
     }
 
     private static List<Fact> getInputs() {
         List<Fact> input = new ArrayList<>();
-        for (int i = 1; i < 10; i++) {
+        int count = new Random().ints(1, facts.size() / 2).findAny().getAsInt();
+        for (int i = 0; i < count; i++) {
+            XmlBaseObject tmpFact = facts.get(factIterator.get().findAny().getAsInt());
             Fact fact = new Fact();
-            fact.setIndex(i);
-            fact.setName(RANDOM_STRING.nextString());
+            fact.setName(String.valueOf(tmpFact.getId()));
+            fact.setNegation(RANDOM_BOOLEAN.nextBoolean());
             input.add(fact);
         }
         return input;
     }
 
-    private Fact getOutput() {
-        Fact output = new Fact();
-        output.setIndex(1);
-        output.setName("1");
-        return output;
+    private static Fact getOutput() {
+        XmlBaseObject output = facts.get(factIterator.get().findFirst().getAsInt());
+        Fact fact = new Fact();
+        fact.setName(String.valueOf(output.getId()));
+        fact.setNegation(false);
+        return fact;
     }
 
     private static void prepareTmpDir() throws IOException {

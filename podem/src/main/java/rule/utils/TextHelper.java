@@ -2,8 +2,8 @@ package rule.utils;
 
 import model.entities.Gate;
 import model.entities.Fact;
+import model.entities.utils.FactUtils;
 import model.entities.utils.GateUtils;
-import model.entities.utils.StateUtils;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -41,7 +41,7 @@ public class TextHelper {
         String[] preconditions = preconditionsPart.split("\\s*и\\s*");
         SortedSet<Fact> result = new TreeSet<>();
         for (String preconditionName : preconditions) {
-            Fact precondition = StateUtils.getState(preconditionName.replaceAll("\"", ""));
+            Fact precondition = FactUtils.getFact(preconditionName.replaceAll("\"", ""));
             result.add(precondition);
         }
         return result;
@@ -69,7 +69,7 @@ public class TextHelper {
         Set<Gate> gates = new HashSet<>();
         for (String line : lines) {
             SortedSet<Fact> preconditions = getPreconditions(line);
-            Fact action = StateUtils.getState(getAction(line));
+            Fact action = FactUtils.getFact(getAction(line));
             Gate g = GateUtils.getGate(preconditions, action);
             gates.add(g);
             if (line.contains("то не")) {

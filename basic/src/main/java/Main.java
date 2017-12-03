@@ -1,3 +1,5 @@
+import rules.parser.parse.XmlParser;
+
 import java.io.IOException;
 
 /**
@@ -6,8 +8,7 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-//        XmlParser.parseDefaultCfg();
-
-//        new RandomGenerator().generate();
+        XmlParser.parseDefaultCfg();
+//        RandomGenerator.generate(100, 100, 100);
     }
 }

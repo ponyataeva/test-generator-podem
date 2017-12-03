@@ -1,8 +1,9 @@
 package rules.validation;
 
-import model.entities.Root;
-import model.entities.Rule;
-import model.entities.Fact;
+import model.dto.Rule;
+import model.dto.Fact;
+import model.dto.Root;
+import model.dto.XmlBaseObject;
 import rules.parser.utils.XMLValidationException;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class Validator {
     }
 
     public void doValidation() {
-        validateFacts(this.root.getStates());
+        validateFacts(this.root.getFacts());
         validateRules(this.root.getRules());
     }
 
@@ -47,14 +48,14 @@ public class Validator {
      *
      * @param facts dirty list of facts.
      */
-    private void validateFacts(List<Fact> facts) {
+    private void validateFacts(List<XmlBaseObject> facts) {
         StringBuilder args = new StringBuilder("");
         for (int i = 0; i < facts.size(); i++) {
-            Fact fact = facts.get(i);
+            XmlBaseObject fact = facts.get(i);
             StringBuilder duplicatesList = new StringBuilder("");
 
             for (int j = i + 1; j < facts.size(); j++) {
-                Fact duplicate = facts.get(j);
+                XmlBaseObject duplicate = facts.get(j);
                 boolean isEqualName = fact.getName().equals(duplicate.getName());
                 if (isEqualName) {
                     duplicatesList.append(duplicate.toString());
@@ -78,7 +79,7 @@ public class Validator {
     private void validateRules(List<Rule> rules) {
         for (int i = 0; i < rules.size(); i++) {
             Rule rule = rules.get(i);
-            validateNegation(rule);
+//            validateNegation(rule);
             validateDuplicateInRules(rule);
             validateSameConditionsWithOtherAction(rule, rules);
         }
@@ -89,7 +90,7 @@ public class Validator {
         for (int j = i + 1; j < target.size(); j++) {
             Rule temp = target.get(j);
             if (source.getInputs().equals(temp.getInputs()) && !(source.getOutput().equals(temp.getOutput()))) {
-                throw new XMLValidationException(format(SAME_CONDITIONS_OTHER_ACTION, temp.getIndex(), source.getIndex()));
+                throw new XMLValidationException(format(SAME_CONDITIONS_OTHER_ACTION, temp.getId(), source.getId()));
             }
         }
     }
@@ -104,7 +105,7 @@ public class Validator {
         Fact out = rule.getOutput();
         for (Fact fact : rule.getInputs()) {
             if (out.equals(fact)) {
-                if (rule.isNegation()) {
+                if (fact.isNegation()) {
                     throw new XMLValidationException(format(INVERSIONS_FOUND, fact.toString(), rule.toString()));
                 }
                 throw new XMLValidationException(format(DUPLICATES_IN_RULE_FOUND, rule.toString()));

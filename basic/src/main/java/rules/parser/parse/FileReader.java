@@ -40,10 +40,10 @@ public class FileReader {
 //                XSSFCell cell = row.getCell(j);
 //                String cellValue = getCellValue(cell);
 //                if (!THEN.equalsIgnoreCase(cellValue)) {
-//                    preconditions.add(StateUtils.createState(cellValue));
+//                    preconditions.add(FactUtils.createState(cellValue));
 //                } else {
 //                    cell = row.getCell(j + 1);
-//                    Fact action = StateUtils.createState(getCellValue(cell));
+//                    Fact action = FactUtils.createState(getCellValue(cell));
 //                    rules.add(new Gate(preconditions, action));
 //                    break;
 //                }
