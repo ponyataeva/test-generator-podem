@@ -2,9 +2,7 @@ package model.dto;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @XmlRootElement
@@ -13,23 +11,13 @@ public class Root {
     private FactsList factsList;
     private RulesList rulesList;
 
-    private Map<Integer, Fact> factsMap = new HashMap<>();
-
     @XmlElement(name = "facts")
     public FactsList getFactsList() {
         return factsList;
     }
 
-    public List<Fact> getStates() {
-        return factsList.getFacts();
-    }
-
     public void setFactsList(FactsList factsList) {
         this.factsList = factsList;
-
-        for (Fact fact : factsList.getFacts()) {
-            factsMap.put(fact.getId(), fact);
-        }
     }
 
     @XmlElement(name = "rules")
@@ -48,14 +36,14 @@ public class Root {
     @XmlRootElement
     public static class FactsList {
 
-        private List<Fact> facts;
+        private List<XmlBaseObject> facts;
 
-        public void setFacts(List<Fact> facts) {
+        public void setFacts(List<XmlBaseObject> facts) {
             this.facts = facts;
         }
 
         @XmlElement(name = "fact")
-        List<Fact> getFacts() {
+        List<XmlBaseObject> getFacts() {
             return facts;
         }
 

@@ -1,12 +1,14 @@
 package model.dto;
 
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
 
 /**
  * Add class description
  */
+@XmlRootElement
 public class XmlBaseObject {
 
     private String name;
@@ -31,7 +33,7 @@ public class XmlBaseObject {
     @XmlTransient()
     public Integer getId() {
         if (id == null) {
-            return Integer.MIN_VALUE;
+            return -1;
         }
         return id;
     }
