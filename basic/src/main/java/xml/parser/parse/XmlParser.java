@@ -4,6 +4,7 @@ import model.dto.Root;
 import model.dto.Rule;
 import model.entities.Fact;
 import model.entities.Gate;
+import model.entities.utils.FactUtils;
 import model.entities.utils.GateUtils;
 import xml.parser.utils.Constants;
 import xml.validation.Validator;
@@ -14,9 +15,13 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import static model.converter.Dto2EntityConverter.convertFact;
+import static model.entities.impl.OperationImpl.NAND;
 
 /**
  * Add class description
@@ -65,15 +70,30 @@ public class XmlParser {
 
     private static Set<Gate> getGates(Root root) {
         Set<Gate> gates = new HashSet<>();
+        root.getFacts().forEach(fact -> FactUtils.getFact(fact.getName(), fact.getId()));
         for (Rule rule : root.getRules()) {
             List<Fact> preconditions = new ArrayList<>();
-            rule.getInputs().forEach(fact -> preconditions.add(convertFact(root.getFacts(), fact)));
-            Fact action = convertFact(root.getFacts(), rule.getOutput());
+            rule.getInputs().forEach(fact -> preconditions.add(FactUtils.getFact(Integer.parseInt(fact.getName()))));
+            Fact action = FactUtils.getFact(Integer.parseInt(rule.getOutput().getName()));
             Gate g = GateUtils.getGate(preconditions, action);
             g.setRuleId(rule.getId());
+
+            if (isNegation(rule)) { // TODO there are WA for stabilization. Need to replace with PODEM code for work with negation rule
+                g.setOperation(NAND);
+            }
             gates.add(g);
         }
         return gates;
+    }
+
+    private static boolean isNegation(Rule rule) {
+        for (model.dto.Fact fact : rule.getInputs()) {
+            if (fact.isNegation()) {
+                return true;
+            }
+        }
+
+        return rule.getOutput().isNegation();
     }
 
     private static JAXBContext getJaxbContext() {

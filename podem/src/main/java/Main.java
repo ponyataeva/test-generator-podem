@@ -12,15 +12,17 @@ import static model.entities.impl.FaultValueImpl.NONE;
 
 public class Main {
     // TODO add static creation of class
-// TODO and objects can be compared by ==
-// TODO переопределить hashCode везде, где переопределен equals
-//
+    // TODO and objects can be compared by ==
+    // TODO переопределить hashCode везде, где переопределен equals
     public static void main(String[] args) throws IOException {
         Set<Gate> gates = XmlParser.parseDefaultCfg();
         Scheme scheme = new Scheme(gates);
 
         FactUtils.getFact("K").setFaultType(FaultValueImpl.sa0);
-//        FactUtils.getFact("G").setValue(Value.NOT_D);
+
+        // TODO need to change model.
+        // Now podem work with Gate's operation and negate it.
+        // In real life will the fact with negation, and need to inverse it.
         PodemExecutor executor = new PodemExecutor(scheme, getFault(gates));
         executor.execute();
         System.out.println(scheme.getTest());

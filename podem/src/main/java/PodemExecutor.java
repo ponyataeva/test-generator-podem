@@ -1,13 +1,12 @@
-import antlr.collections.Stack;
-import antlr.collections.impl.LList;
-import model.entities.Fact;
 import model.entities.Gate;
 import model.entities.Scheme;
+import model.entities.Fact;
 import model.entities.Test;
 import model.entities.impl.Value;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import static model.entities.impl.OperationImpl.NAND;
 import static model.entities.impl.Value.*;
@@ -20,7 +19,7 @@ public class PodemExecutor {
     private List<Test> generatedTests = new ArrayList<>();
     private Scheme scheme;
     private Fact fault;
-    private Stack implication = new LList();
+    private Stack implication = new Stack();
     private List<Fact> propogationPath = new ArrayList<>();
 
     public PodemExecutor(Scheme scheme, Fact fault) {
@@ -29,20 +28,16 @@ public class PodemExecutor {
         findPropagationPath();
     }
 
-    /** TODO выявлять противоречия среди правил
-     * правила долны нумероваться
-     * в одном правиле факт и его инверсия
-     * и в условии и в следствии не может быть один факт
-     * одинаковые условия в правиле, о разные результат
-     * отрицание только в первой части
-     * отрицание часть правила
-     *
-     * @return
-     */
-
     public boolean execute() {
+        // select path for fault propagation from fault to neares PO
+        // select objective
+        // backtrace from objective (set only PI) and put this PI to implication stack
+        // forward implication:
+        // values after fault should be D or not D
+
+
         Fact fact = objective(); // obtain objective
-        fact = backtrace(fact); // there is fact is a PI
+        fact = backtrace(fact); // there is state is a PI
         implication.push(fact);
         fact.setAlternateAssignmentTried(false);
         imply(fact);
@@ -96,13 +91,13 @@ public class PodemExecutor {
      */
 
     private boolean isExhausted() {
-        if (scheme.getPIs().size() == implication.height()) {
+        if (scheme.getPIs().size() == implication.size()) {
             Fact fact = (Fact) implication.pop();
             if (fact.isAlternateAssignment()) {
                 return true;
             }
             implication.push(fact);
-        } else if (implication.height() == 0) {
+        } else if (implication.size() == 0) {
             return true;
         }
         return false;
