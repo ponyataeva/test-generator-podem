@@ -4,6 +4,7 @@ import model.entities.Fact;
 import model.entities.Gate;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Add class description
@@ -11,57 +12,24 @@ import java.util.*;
 public class GateUtils {
 
     private static Set<Gate> allGates = new HashSet<>();
-    private static int currentGateIndex = 0;
+    private static AtomicInteger sequence = new AtomicInteger();
 
     public static Gate getGate(SortedSet<Fact> inputs, Fact output) {
-        for (Gate gate : allGates) {
-            if (gate.getOutput().equals(output)) {
-                gate.addInputs(inputs);
-                addIsInputFor(inputs, gate);
-                return gate;
-            }
-        }
+        return allGates.stream()
+                .filter(gate -> gate.getOutput().equals(output))
+                .peek(gate -> gate.addInputs(inputs))
+                .peek(gate -> inputs.forEach(input -> input.addIsInputFor(gate)))
+                .findFirst().orElse(createNewGate(inputs, output));
+    }
 
+    private static Gate createNewGate(SortedSet<Fact> inputs, Fact output) {
         Gate resultGate = new Gate(inputs, output);
-        resultGate.setIndex(currentGateIndex);
+        resultGate.setIndex(sequence.incrementAndGet());
         allGates.add(resultGate);
 
         output.addIsOutputFor(resultGate);
-        addIsInputFor(inputs, resultGate);
-        currentGateIndex++;
+        inputs.forEach(input -> input.addIsInputFor(resultGate));
 
         return resultGate;
     }
-
-
-    public static Gate getGate(List<Fact> inputs, Fact output) {
-        SortedSet<Fact> set = new TreeSet<>(inputs);
-        for (Gate gate : allGates) {
-            if (gate.getOutput().equals(output)) {
-                gate.addInputs(set);
-                addIsInputFor(set, gate);
-                return gate;
-            }
-        }
-
-        Gate resultGate = new Gate(set, output);
-        resultGate.setIndex(currentGateIndex);
-        allGates.add(resultGate);
-
-        output.addIsOutputFor(resultGate);
-        addIsInputFor(set, resultGate);
-        currentGateIndex++;
-
-        return resultGate;
-    }
-
-    private static void addIsInputFor(Set<Fact> inputs, Gate gate) {
-        for (Fact input : inputs) {
-            input.addIsInputFor(gate);
-        }
-    }
-
-//    public static Set<Gate> getAllGates() {
-//        return allGates;
-//    }
 }

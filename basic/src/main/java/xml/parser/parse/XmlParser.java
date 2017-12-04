@@ -15,11 +15,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import static model.entities.impl.OperationImpl.NAND;
 
@@ -72,7 +72,7 @@ public class XmlParser {
         Set<Gate> gates = new HashSet<>();
         root.getFacts().forEach(fact -> FactUtils.getFact(fact.getName(), fact.getId()));
         for (Rule rule : root.getRules()) {
-            List<Fact> preconditions = new ArrayList<>();
+            SortedSet<Fact> preconditions = new TreeSet<>();
             rule.getInputs().forEach(fact -> preconditions.add(FactUtils.getFact(Integer.parseInt(fact.getName()))));
             Fact action = FactUtils.getFact(Integer.parseInt(rule.getOutput().getName()));
             Gate g = GateUtils.getGate(preconditions, action);
