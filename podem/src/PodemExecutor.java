@@ -1,10 +1,12 @@
-import antlr.collections.Stack;
-import antlr.collections.impl.LList;
-import entities.*;
+import entities.Gate;
+import entities.Scheme;
+import entities.State;
+import entities.Test;
 import entities.impl.Value;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import static entities.impl.OperationImpl.NAND;
 import static entities.impl.Value.*;
@@ -17,7 +19,7 @@ public class PodemExecutor {
     private List<Test> generatedTests = new ArrayList<>();
     private Scheme scheme;
     private State fault;
-    private Stack implication = new LList();
+    private Stack implication = new Stack();
     private List<State> propogationPath = new ArrayList<>();
 
     public PodemExecutor(Scheme scheme, State fault) {
@@ -89,13 +91,13 @@ public class PodemExecutor {
      */
 
     private boolean isExhausted() {
-        if (scheme.getPIs().size() == implication.height()) {
+        if (scheme.getPIs().size() == implication.size()) {
             State state = (State) implication.pop();
             if (state.isAlternateAssignment()) {
                 return true;
             }
             implication.push(state);
-        } else if (implication.height() == 0) {
+        } else if (implication.size() == 0) {
             return true;
         }
         return false;
