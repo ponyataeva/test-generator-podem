@@ -1,4 +1,4 @@
-package rules.parser.utils;
+package xml.parser.utils;
 
 /**
  * Add class description

@@ -3,7 +3,7 @@ import model.entities.Gate;
 import model.entities.Scheme;
 import model.entities.impl.FaultValueImpl;
 import model.entities.utils.FactUtils;
-import rules.parser.parse.XmlParser;
+import xml.parser.parse.XmlParser;
 
 import java.io.IOException;
 import java.util.Set;

@@ -1,13 +1,13 @@
-package rules.parser.parse;
+package xml.parser.parse;
 
 import model.dto.Root;
 import model.dto.Rule;
 import model.entities.Fact;
 import model.entities.Gate;
 import model.entities.utils.GateUtils;
-import rules.parser.utils.Constants;
-import rules.validation.Validator;
-import rules.validation.XSDValidator;
+import xml.parser.utils.Constants;
+import xml.validation.Validator;
+import xml.validation.XSDValidator;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

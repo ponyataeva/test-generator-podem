@@ -1,9 +1,9 @@
-package rules.validation;
+package xml.validation;
 
 import model.dto.Root;
 import org.junit.Before;
 import org.junit.Test;
-import rules.parser.utils.XMLValidationException;
+import xml.parser.utils.XMLValidationException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

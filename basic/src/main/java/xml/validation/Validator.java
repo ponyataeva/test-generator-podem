@@ -1,10 +1,10 @@
-package rules.validation;
+package xml.validation;
 
 import model.dto.Rule;
 import model.dto.Fact;
 import model.dto.Root;
 import model.dto.XmlBaseObject;
-import rules.parser.utils.XMLValidationException;
+import xml.parser.utils.XMLValidationException;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package rules.validation;
+package xml.validation;
 
 import org.xml.sax.SAXException;
 

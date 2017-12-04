@@ -1,4 +1,4 @@
-import rules.parser.parse.XmlParser;
+import xml.parser.parse.XmlParser;
 
 import java.io.IOException;
 

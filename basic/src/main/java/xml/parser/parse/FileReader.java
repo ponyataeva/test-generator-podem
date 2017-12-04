@@ -1,4 +1,4 @@
-package rules.parser.parse;
+package xml.parser.parse;
 
 
 //import org.apache.poi.xssf.usermodel.XSSFCell;
