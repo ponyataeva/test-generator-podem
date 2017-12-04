@@ -1,11 +1,9 @@
-package model.entities.impl;
-
-import model.entities.FaultValue;
+package model.entities;
 
 /**
  * Add class description
  */
-public enum FaultValueImpl implements FaultValue {
+public enum FaultType {
 
     NONE {
         @Override
@@ -26,5 +24,7 @@ public enum FaultValueImpl implements FaultValue {
         public Value getValue() {
             return Value.ZERO;
         }
-    }
+    };
+
+    public abstract Value getValue();
 }

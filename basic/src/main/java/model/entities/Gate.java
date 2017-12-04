@@ -1,8 +1,5 @@
 package model.entities;
 
-import model.entities.impl.Value;
-import model.entities.impl.OperationImpl;
-
 import java.util.*;
 
 /**
@@ -12,7 +9,7 @@ public class Gate implements Comparable<Gate> {
 
     private SortedSet<Fact> inputs;
     private Fact output;
-    private Operation operation = OperationImpl.AND;
+    private Operation operation = Operation.AND;
     private int index;
     private Integer ruleId;
 

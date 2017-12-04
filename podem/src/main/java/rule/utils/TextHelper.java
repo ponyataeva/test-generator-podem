@@ -14,7 +14,7 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static model.entities.impl.OperationImpl.NAND;
+import static model.entities.Operation.NAND;
 
 /**
  * Add class description

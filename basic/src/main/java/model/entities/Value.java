@@ -1,13 +1,9 @@
-package model.entities.impl;
-
-import model.entities.Algebra;
-import model.entities.Fact;
-import model.entities.Gate;
+package model.entities;
 
 /**
  * T6 alphabet using for Podem algorithm.
  */
-public enum Value implements Algebra {
+public enum Value {
     ZERO {
         @Override
         public Value and(Value value) {
@@ -164,5 +160,15 @@ public enum Value implements Algebra {
         public Fact getHardestInput(Gate gate) {
             return null;
         }
-    }
+    };
+
+    abstract Value and(Value value);
+
+    abstract Value or(Value value);
+
+    public abstract Value not();
+
+    abstract Fact getEasiestInput(Gate gate);
+
+    abstract Fact getHardestInput(Gate gate);
 }

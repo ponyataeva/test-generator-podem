@@ -1,8 +1,5 @@
 package model.entities;
 
-import model.entities.impl.FaultValueImpl;
-import model.entities.impl.Value;
-
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -13,7 +10,7 @@ import java.util.TreeSet;
 public class Fact extends BaseObject implements Comparable {
 
     private Value value = Value.X;
-    private FaultValueImpl faultType = FaultValueImpl.NONE;
+    private FaultType faultType = FaultType.NONE;
     private SortedSet<Gate> isInputFor = new TreeSet<>();
     private SortedSet<Gate> isOutputFor = new TreeSet<>();
     private int CC0 = 1;
@@ -63,11 +60,11 @@ public class Fact extends BaseObject implements Comparable {
         this.isOutputFor.add(gate);
     }
 
-    public FaultValueImpl getFaultType() {
+    public FaultType getFaultType() {
         return faultType;
     }
 
-    public void setFaultType(FaultValueImpl faultType) {
+    public void setFaultType(FaultType faultType) {
         this.faultType = faultType;
     }
 

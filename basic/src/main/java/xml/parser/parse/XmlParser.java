@@ -21,7 +21,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import static model.entities.impl.OperationImpl.NAND;
+import static model.entities.Operation.NAND;
 
 /**
  * Add class description

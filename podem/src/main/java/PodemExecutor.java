@@ -2,14 +2,14 @@ import model.entities.Gate;
 import model.entities.Scheme;
 import model.entities.Fact;
 import model.entities.Test;
-import model.entities.impl.Value;
+import model.entities.Value;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import static model.entities.impl.OperationImpl.NAND;
-import static model.entities.impl.Value.*;
+import static model.entities.Operation.NAND;
+import static model.entities.Value.*;
 
 /**
  * Add class description
