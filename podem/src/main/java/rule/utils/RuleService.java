@@ -1,7 +1,7 @@
 package rule.utils;
 
 
-import model.entities.Gate;
+import model.entities.Rule;
 import model.entities.Fact;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class RuleService {
 
-    private static List<Gate> allGates;
+    private static List<Rule> allRules;
     private static RuleService service;
 
     private RuleService() {
@@ -25,8 +25,8 @@ public class RuleService {
         return service;
     }
 
-    public static void setAllGates(List<Gate> allGates) {
-        RuleService.allGates = allGates;
+    public static void setAllRules(List<Rule> allRules) {
+        RuleService.allRules = allRules;
     }
 
     /**
@@ -35,14 +35,14 @@ public class RuleService {
      * @param fact which should containsInput in rules/
      * @return list of rules.
      */
-    public List<Gate> getRulesByInput(Fact fact) {
-        List<Gate> gates = new ArrayList<>();
-//        return allGates.stream().filter(rule -> rule.containsInput(fact)).collect(Collectors.toList());
-        for (Gate gate : allGates) {
-            if (gate.containsInput(fact)) {
-                gates.add(gate);
+    public List<Rule> getRulesByInput(Fact fact) {
+        List<Rule> rules = new ArrayList<>();
+//        return allRules.stream().filter(rule -> rule.containsInput(fact)).collect(Collectors.toList());
+        for (Rule rule : allRules) {
+            if (rule.containsInput(fact)) {
+                rules.add(rule);
             }
-        } return gates;
+        } return rules;
     }
 
     /**
@@ -51,13 +51,13 @@ public class RuleService {
      * @param fact which should containsInput in rules/
      * @return list of rules.
      */
-    public List<Gate> getRulesByOutput(Fact fact) {
-        List<Gate> gates = new ArrayList<>();
-//        return allGates.stream().filter(rule -> rule.containsInput(fact)).collect(Collectors.toList());
-        for (Gate gate : allGates) {
-            if (gate.containsOutput(fact)) {
-                gates.add(gate);
+    public List<Rule> getRulesByOutput(Fact fact) {
+        List<Rule> rules = new ArrayList<>();
+//        return allRules.stream().filter(rule -> rule.containsInput(fact)).collect(Collectors.toList());
+        for (Rule rule : allRules) {
+            if (rule.containsOutput(fact)) {
+                rules.add(rule);
             }
-        } return gates;
+        } return rules;
     }
 }

@@ -1,6 +1,6 @@
-import model.entities.Gate;
-import model.entities.Scheme;
 import model.entities.FaultType;
+import model.entities.Rule;
+import model.entities.Scheme;
 import model.entities.utils.FactUtils;
 import xml.parser.parse.XmlParser;
 
@@ -12,16 +12,22 @@ public class Main {
     // TODO and objects can be compared by ==
     // TODO переопределить hashCode везде, где переопределен equals
     public static void main(String[] args) throws IOException {
-        Set<Gate> gates = XmlParser.parseDefaultCfg();
-        Scheme scheme = new Scheme(gates);
+        Set<Rule> rules = XmlParser.parseDefaultCfg();
+        Scheme scheme = new Scheme(rules);
 
-        FactUtils.getFact("K").setFaultType(FaultType.sa0);
+//        FactUtils.getFact("K").setFaultType(FaultType.sa0);
 
-        // TODO need to change model.
-        // Now podem work with Gate's operation and negate it.
-        // In real life will the fact with negation, and need to inverse it.
-        PodemExecutor executor = new PodemExecutor(scheme, FactUtils.getFact("K"));
-        executor.execute();
-        System.out.println(scheme.getTest());
+        FactUtils.getAllFacts().forEach(fact -> {
+            fact.setFaultType(FaultType.sa0);
+            try {
+                new PodemExecutor(scheme, fact).execute();
+                System.out.println(scheme.getTest());
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+            scheme.clear();
+            fact.setFaultType(FaultType.NONE);
+            System.out.println("====================================================================");
+        });
     }
 }

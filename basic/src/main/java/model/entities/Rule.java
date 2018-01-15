@@ -1,46 +1,183 @@
 package model.entities;
 
-import java.util.List;
+import java.util.*;
 
 /**
- * Add class description
+ * Consists preconditions and output.
  */
-public class Rule extends BaseObject {
+public class Rule implements Comparable<Rule> {
 
-    private List<Fact> inputs;
+    private SortedSet<Fact> inputs;
+    private Map<Integer, Boolean> inputsNegation = new HashMap<>();
     private Fact output;
-    private boolean isNegation;
+    private Operation operation = Operation.AND;
+    private int index;
+    private Integer ruleId;
 
-    public List<Fact> getInputs() {
-        return inputs;
+    public Rule(SortedSet<Fact> inputs, Fact output) {
+        this.inputs = inputs;
+        this.output = output;
+        inputs.forEach(input -> inputsNegation.put(input.getIndex(), input.isNegation()));
+        inputsNegation.put(output.index, output.isNegation());
     }
 
-    public void setInputs(List<Fact> inputs) {
-        this.inputs = inputs;
+    public Boolean isNegatedFact(Integer factId) {
+        return inputsNegation.get(factId);
+    }
+
+
+
+    public void addInputs(SortedSet<Fact> inputs) {
+        this.inputs.addAll(inputs);
+    }
+
+    public Set<Fact> getInputs() {
+        return inputs;
     }
 
     public Fact getOutput() {
         return output;
     }
 
-    public void setOutput(Fact output) {
-        this.output = output;
+    public boolean containsInput(Fact fact) {
+        for (Fact ruleFact : inputs) {
+            if (ruleFact.equals(fact)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public boolean isNegation() {
-        return isNegation;
+    public boolean containsOutput(Fact fact) {
+        return output.equals(fact);
     }
 
-    public void setNegation(boolean negation) {
-        isNegation = negation;
+    public boolean hasDInput() {
+        for (Fact input : inputs) {
+            if (input.getValue().equals(Value.D) ||
+                    input.getValue().equals(Value.NOT_D)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isAllInputsAssigned() {
+        for (Fact fact : inputs) {
+            if (fact.isUnassigned()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Execute gate operation under all inputs.
+     */
+    public void simulate() {
+        if (output.isPrimaryOutput() && !isAllInputsAssigned()) {
+            return;
+        }
+
+        List<Value> values = new ArrayList<>();
+        for (Fact input : inputs) {
+            values.add(input.getValue());
+        }
+
+        Value result = operation.execute(values);
+        output.setValue(result);
+    }
+
+    public Operation getOperation() {
+        return operation;
+    }
+
+    public void setOperation(Operation operation) {
+        this.operation = operation;
+    }
+
+    public int calculateCC0() {
+        return operation.calculateCC0(inputs.toArray(new Fact[inputs.size()]));
+    }
+
+    public int calculateCC1() {
+        return operation.calculateCC1(inputs.toArray(new Fact[inputs.size()]));
+    }
+
+    public Fact getEasierPathCC0() {
+        Fact result = null;
+        for (Fact input : inputs) {
+            if ((result == null || input.getCC0() < result.getCC0()) && isUnassignedPI(input)) {
+                result = input;
+            }
+        }
+        return result;
+    }
+
+    public Fact getEasierPathCC1() {
+        Fact result = null;
+        for (Fact input : inputs) {
+            if (result == null || input.getCC1() < result.getCC1() && isUnassignedPI(input)) {
+                result = input;
+            }
+        }
+        return result;
+    }
+
+    public Fact getHardestPathCC0() {
+        Fact result = null;
+        for (Fact input : inputs) {
+            if ((result == null || input.getCC0() > result.getCC0()) && isUnassignedPI(input)) {
+                result = input;
+            }
+        }
+        return result;
+    }
+
+    public Fact getHardestPathCC1() {
+        Fact result = null;
+        for (Fact input : inputs) {
+            if ((result == null || input.getCC1() > result.getCC1()) && isUnassignedPI(input)) {
+                result = input;
+            }
+        }
+        return result;
+    }
+
+    private boolean isUnassignedPI(Fact fact) {
+        return fact.isPrimaryInput() && (fact.isUnassigned() || fact.isAlternateAssignment());
+    }
+
+    public boolean hasNonControllingValue() {
+        return operation.getNonControllingValue().equals(output.getValue());
+    }
+
+    public Integer getRuleId() {
+        return ruleId;
+    }
+
+    public void setRuleId(Integer ruleId) {
+        this.ruleId = ruleId;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    @Override
+    public int compareTo(Rule o) {
+        return this.getIndex().compareTo(o.getIndex());
     }
 
     @Override
     public String toString() {
-        return "Rule{" +
-                "index=" + index +
-                ", inputs=" + inputs +
-                ", output=" + output +
+        return "\nRule{" +
+                "inputs=" + inputs +
+                ",output=" + output +
                 '}';
     }
 }

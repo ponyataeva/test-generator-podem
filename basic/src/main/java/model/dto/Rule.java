@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 /**
- * Dto of Rule object
+ * Dto of RuleOld object
  */
 @XmlRootElement
 public class Rule extends XmlBaseObject {
@@ -33,7 +33,7 @@ public class Rule extends XmlBaseObject {
 
     @Override
     public String toString() {
-        return "Rule{" +
+        return "RuleOld{" +
                 "index=" + getId() +
                 ", inputs=" + inputs +
                 ", output=" + output +

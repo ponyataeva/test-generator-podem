@@ -1,11 +1,9 @@
 package xml.parser.parse;
 
 import model.dto.Root;
-import model.dto.Rule;
 import model.entities.Fact;
-import model.entities.Gate;
-import model.entities.utils.FactUtils;
-import model.entities.utils.GateUtils;
+import model.entities.Rule;
+import model.entities.utils.RuleUtils;
 import xml.parser.utils.Constants;
 import xml.validation.Validator;
 import xml.validation.XSDValidator;
@@ -15,13 +13,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 import static model.entities.Operation.NAND;
+import static model.entities.utils.FactUtils.createFact;
+import static model.entities.utils.FactUtils.getFact;
 
 /**
  * Add class description
@@ -35,15 +31,15 @@ public class XmlParser {
     private XmlParser() {
     }
 
-    public static Set<Gate> parseDefaultCfg(String pathToFile) throws IOException {
+    public static Set<Rule> parseDefaultCfg(String pathToFile) throws IOException {
         return parseDefaultCfg(new File(pathToFile));
     }
 
-    public static Set<Gate> parseDefaultCfg() {
+    public static Set<Rule> parseDefaultCfg() {
         return parseDefaultCfg(RULES_FILE);
     }
 
-    public static Set<Gate> parseDefaultCfg(File file) {
+    public static Set<Rule> parseDefaultCfg(File file) {
         boolean isValid = XSDValidator.validateXMLSchema(XSD_FILE, file);
         if (!isValid) {
             System.out.println(Constants.INVALID_XML_CFG);
@@ -52,7 +48,7 @@ public class XmlParser {
         return doParse();
     }
 
-    private static Set<Gate> doParse() {
+    private static Set<Rule> doParse() {
         Root root = parseToDto();
 //        System.out.println(root);
         new Validator(root).doValidation();
@@ -68,32 +64,36 @@ public class XmlParser {
         }
     }
 
-    private static Set<Gate> getGates(Root root) {
-        Set<Gate> gates = new HashSet<>();
-        root.getFacts().forEach(fact -> FactUtils.getFact(fact.getName(), fact.getId()));
-        for (Rule rule : root.getRules()) {
-            SortedSet<Fact> preconditions = new TreeSet<>();
-            rule.getInputs().forEach(fact -> preconditions.add(FactUtils.getFact(Integer.parseInt(fact.getName()))));
-            Fact action = FactUtils.getFact(Integer.parseInt(rule.getOutput().getName()));
-            Gate g = GateUtils.getGate(preconditions, action);
-            g.setRuleId(rule.getId());
+    private static Set<Rule> getGates(Root root) {
+        Set<Rule> rules = new HashSet<>();
+        root.getFacts().forEach(fact -> createFact(fact.getName(), fact.getId()));
 
-            if (isNegation(rule)) { // TODO there are WA for stabilization. Need to replace with PODEM code for work with negation rule
-                g.setOperation(NAND);
+        root.getRules().forEach(ruleDto -> {
+            SortedSet<Fact> preconditions = new TreeSet<>();
+            ruleDto.getInputs().forEach(
+                    factDto -> {
+                        Fact fact = getFact(Integer.parseInt(factDto.getName()));
+                        fact.setNegation(factDto.isNegation());
+                        preconditions.add(fact);
+                    });
+            Fact action = getFact(Integer.parseInt(ruleDto.getOutput().getName()));
+            action.setNegation(ruleDto.getOutput().isNegation());
+
+            Rule rule = RuleUtils.getRule(preconditions, action);
+            rule.setRuleId(ruleDto.getId());
+
+            // TODO there are WA for stabilization.
+            // Need to replace with PODEM code for work with negation rule
+            if (isNegation(rule)) {
+                rule.setOperation(NAND);
             }
-            gates.add(g);
-        }
-        return gates;
+            rules.add(rule);
+        });
+        return rules;
     }
 
     private static boolean isNegation(Rule rule) {
-        for (model.dto.Fact fact : rule.getInputs()) {
-            if (fact.isNegation()) {
-                return true;
-            }
-        }
-
-        return rule.getOutput().isNegation();
+        return rule.isNegatedFact(rule.getOutput().getIndex());
     }
 
     private static JAXBContext getJaxbContext() {

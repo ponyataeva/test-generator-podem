@@ -1,9 +1,9 @@
 package rule.utils;
 
-import model.entities.Gate;
+import model.entities.Rule;
 import model.entities.Fact;
 import model.entities.utils.FactUtils;
-import model.entities.utils.GateUtils;
+import model.entities.utils.RuleUtils;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -65,18 +65,18 @@ public class TextHelper {
         return null;
     }
 
-    public static Set<Gate> parse(List<String> lines) {
-        Set<Gate> gates = new HashSet<>();
+    public static Set<Rule> parse(List<String> lines) {
+        Set<Rule> rules = new HashSet<>();
         for (String line : lines) {
             SortedSet<Fact> preconditions = getPreconditions(line);
             Fact action = FactUtils.getFact(getAction(line));
-            Gate g = GateUtils.getGate(preconditions, action);
-            gates.add(g);
+            Rule g = RuleUtils.getRule(preconditions, action);
+            rules.add(g);
             if (line.contains("то не")) {
                 g.setOperation(NAND);
             }
         }
-        return gates;
+        return rules;
     }
 
     private static String findPart(String line, String regexp) {

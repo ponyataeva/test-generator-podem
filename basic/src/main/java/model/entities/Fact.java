@@ -11,8 +11,8 @@ public class Fact extends BaseObject implements Comparable {
 
     private Value value = Value.X;
     private FaultType faultType = FaultType.NONE;
-    private SortedSet<Gate> isInputFor = new TreeSet<>();
-    private SortedSet<Gate> isOutputFor = new TreeSet<>();
+    private SortedSet<Rule> isInputFor = new TreeSet<>();
+    private SortedSet<Rule> isOutputFor = new TreeSet<>();
     private int CC0 = 1;
     private int CC1 = 1;
 
@@ -31,6 +31,11 @@ public class Fact extends BaseObject implements Comparable {
         return value;
     }
 
+    public void setToDefault() {
+        this.alternateAssignmentTried = false;
+        this.value = Value.X;
+    }
+
     public void setValue(Value value) {
         this.value = value;
         System.out.println("Set [" + name + "] = " + value);
@@ -44,20 +49,20 @@ public class Fact extends BaseObject implements Comparable {
         return !isAssigned();
     }
 
-    public SortedSet<Gate> isInputFor() {
+    public SortedSet<Rule> isInputFor() {
         return isInputFor;
     }
 
-    public void addIsInputFor(Gate gate) {
-        this.isInputFor.add(gate);
+    public void addIsInputFor(Rule rule) {
+        this.isInputFor.add(rule);
     }
 
-    public Set<Gate> isOutputFor() {
+    public Set<Rule> isOutputFor() {
         return isOutputFor;
     }
 
-    public void addIsOutputFor(Gate gate) {
-        this.isOutputFor.add(gate);
+    public void addIsOutputFor(Rule rule) {
+        this.isOutputFor.add(rule);
     }
 
     public FaultType getFaultType() {
@@ -66,6 +71,7 @@ public class Fact extends BaseObject implements Comparable {
 
     public void setFaultType(FaultType faultType) {
         this.faultType = faultType;
+        System.out.println("Fact[" + this.name + "] set fault " + faultType);
     }
 
     public boolean isPrimaryInput() {

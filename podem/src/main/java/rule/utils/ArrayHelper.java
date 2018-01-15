@@ -1,7 +1,7 @@
 package rule.utils;
 
 import model.entities.Fact;
-import model.entities.Gate;
+import model.entities.Rule;
 
 import java.util.HashSet;
 import java.util.List;
@@ -13,24 +13,24 @@ import java.util.Set;
 public class ArrayHelper {
 
     /**
-     * Build by list of gates the adjacency matrix.
+     * Build by list of rules the adjacency matrix.
      * 0 - if an edge not exists,
      * 1 - an edge exists.
      *
-     * @param gates - list with gates.
+     * @param rules - list with rules.
      * @return adjacency matrix
      */
-    public static int[][] toArray(List<Gate> gates) {
+    public static int[][] toArray(List<Rule> rules) {
         Set<Fact> allFacts = new HashSet<>();
-        for (Gate gate : gates) {
-            allFacts.addAll(gate.getInputs());
-            allFacts.add(gate.getOutput());
+        for (Rule rule : rules) {
+            allFacts.addAll(rule.getInputs());
+            allFacts.add(rule.getOutput());
         }
         int[][] result = new int[allFacts.size()][allFacts.size()];
 
-        for (Gate gate : gates) {
-            int destinationIndex = gate.getOutput().getIndex();
-            for (Fact fact : gate.getInputs()) {
+        for (Rule rule : rules) {
+            int destinationIndex = rule.getOutput().getIndex();
+            for (Fact fact : rule.getInputs()) {
                 result[fact.getIndex()][destinationIndex] = 1;
             }
         }

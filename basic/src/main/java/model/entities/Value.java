@@ -21,13 +21,13 @@ public enum Value {
         }
 
         @Override
-        public Fact getEasiestInput(Gate gate) {
-            return gate.getEasierPathCC0();
+        public Fact getEasiestInput(Rule rule) {
+            return rule.getEasierPathCC0();
         }
 
         @Override
-        public Fact getHardestInput(Gate gate) {
-            return gate.getHardestPathCC0();
+        public Fact getHardestInput(Rule rule) {
+            return rule.getHardestPathCC0();
         }
     },
 
@@ -51,13 +51,13 @@ public enum Value {
         }
 
         @Override
-        public Fact getEasiestInput(Gate gate) {
-            return gate.getEasierPathCC1();
+        public Fact getEasiestInput(Rule rule) {
+            return rule.getEasierPathCC1();
         }
 
         @Override
-        public Fact getHardestInput(Gate gate) {
-            return gate.getHardestPathCC1();
+        public Fact getHardestInput(Rule rule) {
+            return rule.getHardestPathCC1();
         }
     },
 
@@ -88,12 +88,12 @@ public enum Value {
         }
 
         @Override
-        public Fact getEasiestInput(Gate gate) {
+        public Fact getEasiestInput(Rule rule) {
             return null;
         }
 
         @Override
-        public Fact getHardestInput(Gate gate) {
+        public Fact getHardestInput(Rule rule) {
             return null;
         }
     },
@@ -125,12 +125,12 @@ public enum Value {
         }
 
         @Override
-        public Fact getEasiestInput(Gate gate) {
+        public Fact getEasiestInput(Rule rule) {
             return null;
         }
 
         @Override
-        public Fact getHardestInput(Gate gate) {
+        public Fact getHardestInput(Rule rule) {
             return null;
         }
     },
@@ -152,12 +152,12 @@ public enum Value {
         }
 
         @Override
-        public Fact getEasiestInput(Gate gate) {
+        public Fact getEasiestInput(Rule rule) {
             return null;
         }
 
         @Override
-        public Fact getHardestInput(Gate gate) {
+        public Fact getHardestInput(Rule rule) {
             return null;
         }
     };
@@ -168,7 +168,7 @@ public enum Value {
 
     public abstract Value not();
 
-    abstract Fact getEasiestInput(Gate gate);
+    abstract Fact getEasiestInput(Rule rule);
 
-    abstract Fact getHardestInput(Gate gate);
+    abstract Fact getHardestInput(Rule rule);
 }

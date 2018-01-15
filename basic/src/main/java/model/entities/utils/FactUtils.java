@@ -12,6 +12,10 @@ public class FactUtils {
 
     private static Set<Fact> allFacts = new HashSet<>();
 
+    public static Set<Fact> getAllFacts() {
+        return allFacts;
+    }
+
     /**
      * Multitone for the fact objects.
      * <p>
@@ -21,17 +25,17 @@ public class FactUtils {
      * @param factName - name of the fact
      * @return the fact object with index.
      */
-    public static Fact getFact(String factName, int index) {
-        Fact resultFact = new Fact(factName);
-        for (Fact fact : allFacts) {
-            if (fact.equals(resultFact)) {
-                return fact;
-            }
-        }
-        resultFact.setIndex(index);
-        allFacts.add(resultFact);
-
-        return resultFact;
+    public static Fact createFact(String factName, int index) {
+//        Fact resultFact = new Fact(factName);
+        return allFacts.stream()
+                .filter(fact -> fact.getName().equals(factName)).findFirst()
+                .orElseGet(() -> {
+                    Fact fact = new Fact();
+                    fact.setName(factName);
+                    fact.setIndex(index);
+                    allFacts.add(fact);
+                    return fact;
+                });
     }
 
     public static Fact getFact(String name) {
@@ -41,11 +45,8 @@ public class FactUtils {
     }
 
     public static Fact getFact(int index) {
-        for (Fact fact : allFacts) {
-            if (fact.getIndex().equals(index)) {
-                return fact;
-            }
-        }
-        return null;
+        return allFacts.stream()
+                .filter(fact -> fact.getIndex().equals(index))
+                .findFirst().get();
     }
 }

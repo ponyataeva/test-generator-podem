@@ -4,51 +4,43 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Add class description
  */
 public class Scheme {
 
-    private Set<Gate> allGates = new HashSet<>();
+    private Set<Rule> allRules = new HashSet<>();
 
     private List<Fact> PIs = new ArrayList<>();
     private Fact PO;
 
-    public Scheme(Set<Gate> allGates) {
-        this.allGates = allGates;
-        for (Gate gate : this.allGates) {
-            for (Fact input : gate.getInputs()) {
-                if (input.isPrimaryInput()) {
-                    PIs.add(input);
-                }
+    public Scheme(Set<Rule> allRules) {
+        this.allRules = allRules;
+        for (Rule rule : this.allRules) {
+            PIs.addAll(rule.getInputs().stream().filter(Fact::isPrimaryInput).collect(Collectors.toList()));
+            if (rule.getOutput().isPrimaryOutput()) {
+                PO = rule.getOutput();
             }
-            if (gate.getOutput().isPrimaryOutput()) {
-                PO = gate.getOutput();
-            }
-            System.out.println(gate + " was success parsed");
+            System.out.println(rule + " was success parsed");
         }
         calculateControllability();
     }
 
     private void calculateControllability() {
-        for (Fact pi : PIs) {
-            calculateControllability(pi);
-        }
+        PIs.forEach(this::calculateControllability);
         System.out.println("Controllability of states calculated success");
     }
 
     private void calculateControllability(Fact fact) {
-        Fact out;
-        for(Gate gate : fact.isInputFor()) {
-            out = gate.getOutput();
-            out.setCC0(gate.calculateCC0());
-            out.setCC1(gate.calculateCC1());
-        }
+        fact.isInputFor().forEach(rule -> {
+            Fact out = rule.getOutput();
+            out.setCC0(rule.calculateCC0());
+            out.setCC1(rule.calculateCC1());
+        });
 
-        for(Gate gate : fact.isInputFor()) {
-            calculateControllability(gate.getOutput());
-        }
+        fact.isInputFor().forEach(rule -> calculateControllability(rule.getOutput()));
     }
 
 
@@ -68,14 +60,21 @@ public class Scheme {
         return test;
     }
 
+    public void clear() {
+        allRules.forEach(rule -> {
+            rule.getInputs().forEach(Fact::setToDefault);
+            rule.getOutput().setToDefault();
+        });
+    }
+
     @Override
     public String toString() {
         return "Scheme{" +
-                "allGates=" + allGates +
+                "allRules=" + allRules +
                 '}';
     }
 
-    public void print(){
+    public void print() {
         System.out.println(this);
     }
 }

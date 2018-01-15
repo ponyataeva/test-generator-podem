@@ -1,8 +1,5 @@
-import model.entities.Gate;
-import model.entities.Scheme;
-import model.entities.Fact;
-import model.entities.Test;
-import model.entities.Value;
+import model.entities.*;
+import model.entities.Rule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +42,7 @@ public class PodemExecutor {
         if (faultIsPropagated()) {
             return true;
         }
-        List<Gate> dFrontier = getDFrontier(fault);
+        List<Rule> dFrontier = getDFrontier(fault);
         if (xPathCheck(dFrontier)) { // is test possible
 
             if (execute()) {
@@ -112,13 +109,13 @@ public class PodemExecutor {
      */
     private void imply(Fact fact) {
         while (!fact.isPrimaryOutput()) {
-            for (Gate gate : fact.isInputFor()) {
-                fact = gate.getOutput();
+            for (Rule rule : fact.isInputFor()) {
+                fact = rule.getOutput();
                 if (fact.isUnassigned()) {
-                    gate.simulate();
+                    rule.simulate();
                 } else if (fact.equals(fault) && !fact.hasDisagreementValue()) {
                     Value tempValue = fact.getValue();
-                    gate.simulate();
+                    rule.simulate();
                     if (fact.getValue().equals(tempValue)) {
                         if (fact.getValue().equals(ONE)) {
                             fact.setValue(D);
@@ -129,7 +126,7 @@ public class PodemExecutor {
                         fact.setValue(X);
                     }
                 } else if (fact.isAlternateAssignment()) {
-                    gate.simulate();
+                    rule.simulate();
                 }
             }
         }
@@ -145,21 +142,21 @@ public class PodemExecutor {
     private Fact backtrace(Fact fact) {
         Value tempValue = fact.getValue();
         while (!fact.isPrimaryInput()) {
-            for (Gate gate : fact.isOutputFor()) {
-                if (gate.getOperation().equals(NAND)) {
+            for (Rule rule : fact.isOutputFor()) {
+                if (rule.getOperation().equals(NAND)) {
                     tempValue = tempValue.not();
                 }
-                if (allInputsNeedSet(gate, fact)) {
+                if (allInputsNeedSet(rule, fact)) {
                     if (fact.getValue().equals(ONE)) {
-                        fact = gate.getHardestPathCC1();
+                        fact = rule.getHardestPathCC1();
                     } else {
-                        fact = gate.getHardestPathCC0();
+                        fact = rule.getHardestPathCC0();
                     }
                 } else {
                     if (fact.getValue().equals(ONE)) {
-                        fact = gate.getEasierPathCC1();
+                        fact = rule.getEasierPathCC1();
                     } else {
-                        fact = gate.getEasierPathCC0();
+                        fact = rule.getEasierPathCC0();
                     }
                     Fact b = backtrace(fact);
                     if (b != null) {
@@ -172,7 +169,7 @@ public class PodemExecutor {
         return fact;
     }
 
-    private boolean allInputsNeedSet(Gate g, Fact output) {
+    private boolean allInputsNeedSet(Rule g, Fact output) {
         return g.getOperation() == NAND && output.getValue().equals(ZERO);
     }
 
@@ -188,7 +185,7 @@ public class PodemExecutor {
             return fault;
         }
 
-        for (Gate target : getDFrontier(fault)) {
+        for (Rule target : getDFrontier(fault)) {
             // TODO how to any states settings to D ?
             Fact output = target.getOutput();
             // find the shortest unassigned path
@@ -214,9 +211,9 @@ public class PodemExecutor {
      * @param dFrontier
      * @return
      */
-    private boolean xPathCheck(List<Gate> dFrontier) {
-        for (Gate gate : dFrontier) {
-            Fact out = gate.getOutput();
+    private boolean xPathCheck(List<Rule> dFrontier) {
+        for (Rule rule : dFrontier) {
+            Fact out = rule.getOutput();
             if (out.isUnassigned()) {
                 return out.isPrimaryOutput() || xPathCheck(new ArrayList<>(out.isInputFor()));
             }
@@ -231,14 +228,14 @@ public class PodemExecutor {
      *
      * @return
      */
-    private List<Gate> getDFrontier(Fact fault) {
-        List<Gate> dFrontier = new ArrayList<>();
-        for (Gate gate : fault.isInputFor()) {
-            if (gate.getOutput().isUnassigned() && gate.hasDInput()) {
-                dFrontier.add(gate);
+    private List<Rule> getDFrontier(Fact fault) {
+        List<Rule> dFrontier = new ArrayList<>();
+        for (Rule rule : fault.isInputFor()) {
+            if (rule.getOutput().isUnassigned() && rule.hasDInput()) {
+                dFrontier.add(rule);
             }
 
-            dFrontier.addAll(getDFrontier(gate.getOutput()));
+            dFrontier.addAll(getDFrontier(rule.getOutput()));
         }
         return dFrontier;
     }
@@ -261,8 +258,8 @@ public class PodemExecutor {
     private List<Fact> searchPath(Fact fact) {
         List<Fact> temp = new ArrayList<>();
         List<Fact> minPath = new ArrayList<>();
-        for (Gate gate : fact.isInputFor()) {
-            Fact out = gate.getOutput();
+        for (Rule rule : fact.isInputFor()) {
+            Fact out = rule.getOutput();
             temp.add(out);
             if (out.isPrimaryOutput()) {
                 return temp;
