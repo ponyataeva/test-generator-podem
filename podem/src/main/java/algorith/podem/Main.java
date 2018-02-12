@@ -1,3 +1,5 @@
+package algorith.podem;
+
 import model.entities.FaultType;
 import model.entities.Rule;
 import model.entities.Scheme;
@@ -15,13 +17,12 @@ public class Main {
         Set<Rule> rules = XmlParser.parseDefaultCfg();
         Scheme scheme = new Scheme(rules);
 
-//        FactUtils.getFact("K").setFaultType(FaultType.sa0);
-
         FactUtils.getAllFacts().forEach(fact -> {
             fact.setFaultType(FaultType.sa0);
             try {
-                new PodemExecutor(scheme, fact).execute();
+                new PodemApplication(scheme, fact).execute();
                 System.out.println(scheme.getTest());
+                scheme.print();
             } catch (Exception e) {
                 System.out.println(e);
             }

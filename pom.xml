@@ -9,7 +9,7 @@
     <modules>
         <module>basic</module>
         <module>podem</module>
-        <module>xsd2xml</module>
+        <module>fan</module>
     </modules>
 
 

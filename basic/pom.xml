@@ -40,12 +40,6 @@
             <artifactId>xmlschema-core</artifactId>
             <version>2.2.2</version>
         </dependency>
-        <dependency>
-            <groupId>test-generator</groupId>
-            <artifactId>xsd2xml</artifactId>
-            <version>1.0</version>
-        </dependency>
-
     </dependencies>
 
 

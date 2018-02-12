@@ -1,25 +1,50 @@
+package algorith.podem;
+
 import model.entities.*;
 import model.entities.Rule;
+import model.entities.utils.FactUtils;
+import xml.parser.parse.XmlParser;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 import static model.entities.Operation.NAND;
 import static model.entities.Value.*;
 
-/**
- * Add class description
- */
-public class PodemExecutor {
+public class PodemApplication {
 
     private List<Test> generatedTests = new ArrayList<>();
     private Scheme scheme;
     private Fact fault;
     private Stack implication = new Stack();
-    private List<Fact> propogationPath = new ArrayList<>();
+    private List<Fact> propagationPath = new ArrayList<>();
 
-    public PodemExecutor(Scheme scheme, Fact fault) {
+    // TODO add static creation of class
+    // TODO and objects can be compared by ==
+    // TODO переопределить hashCode везде, где переопределен equals
+    public static void main(String[] args) throws IOException {
+        Set<Rule> rules = XmlParser.parseDefaultCfg();
+        Scheme scheme = new Scheme(rules);
+
+        FactUtils.getAllFacts().forEach(fact -> {
+            fact.setFaultType(FaultType.sa0);
+            try {
+                new PodemApplication(scheme, fact).execute();
+                System.out.println(scheme.getTest());
+                scheme.print();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+            scheme.clear();
+            fact.setFaultType(FaultType.NONE);
+            System.out.println("====================================================================");
+        });
+    }
+
+    public PodemApplication(Scheme scheme, Fact fault) {
         this.scheme = scheme;
         this.fault = fault;
         findPropagationPath();
@@ -31,7 +56,6 @@ public class PodemExecutor {
         // backtrace from objective (set only PI) and put this PI to implication stack
         // forward implication:
         // values after fault should be D or not D
-
 
         Fact fact = objective(); // obtain objective
         fact = backtrace(fact); // there is state is a PI
@@ -80,12 +104,6 @@ public class PodemExecutor {
         }
         return false;
     }
-
-    /**
-     * gets a list of the inputs that will sensitize the fault
-     *
-     * @return
-     */
 
     private boolean isExhausted() {
         if (scheme.getPIs().size() == implication.size()) {
@@ -169,8 +187,8 @@ public class PodemExecutor {
         return fact;
     }
 
-    private boolean allInputsNeedSet(Rule g, Fact output) {
-        return g.getOperation() == NAND && output.getValue().equals(ZERO);
+    private boolean allInputsNeedSet(Rule rule, Fact output) {
+        return rule.getOperation() == NAND && output.getValue().equals(ZERO);
     }
 
     /**
@@ -186,10 +204,9 @@ public class PodemExecutor {
         }
 
         for (Rule target : getDFrontier(fault)) {
-            // TODO how to any states settings to D ?
             Fact output = target.getOutput();
             // find the shortest unassigned path
-            if (!propogationPath.contains(output) || output.isAssigned()) {
+            if (!propagationPath.contains(output) || output.isAssigned()) {
                 continue;
             }
             if (target.hasNonControllingValue()) {
@@ -241,7 +258,7 @@ public class PodemExecutor {
     }
 
     private boolean faultIsPropagated() {
-        for (Fact fact : propogationPath) {
+        for (Fact fact : propagationPath) {
             if (!(fact.getValue().equals(D) || fact.getValue().equals(NOT_D))) {
                 return false;
             }
@@ -250,9 +267,9 @@ public class PodemExecutor {
     }
 
     private void findPropagationPath() {
-        propogationPath.add(fault);
-        propogationPath.addAll(searchPath(fault));
-        System.out.println("Fault Propagation path is " + propogationPath);
+        propagationPath.add(fault);
+        propagationPath.addAll(searchPath(fault));
+        System.out.println("Fault Propagation path is " + propagationPath);
     }
 
     private List<Fact> searchPath(Fact fact) {

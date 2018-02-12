@@ -1,4 +1,4 @@
-package rule.utils;
+package algorith.podem.utils;
 
 /**
  * Patterns constants.

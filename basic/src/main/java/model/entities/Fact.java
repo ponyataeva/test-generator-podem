@@ -17,11 +17,9 @@ public class Fact extends BaseObject implements Comparable {
     private int CC1 = 1;
 
     private boolean isNegation;
-
     private boolean alternateAssignmentTried;
 
-    public Fact() {
-    }
+    public Fact() {}
 
     public Fact(String name) {
         this.name = name;
@@ -140,6 +138,6 @@ public class Fact extends BaseObject implements Comparable {
     }
 
     public String toString() {
-        return String.format("(%s)%s %s", index, isNegation ? "(negation)" : "", name);
+        return String.format("(%s) %s %s = %s", index, isNegation ? "(negation)" : "", name, value);
     }
 }
