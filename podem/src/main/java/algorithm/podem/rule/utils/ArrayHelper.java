@@ -1,4 +1,4 @@
-package algorith.podem.utils;
+package algorithm.podem.rule.utils;
 
 import model.entities.Fact;
 import model.entities.Rule;

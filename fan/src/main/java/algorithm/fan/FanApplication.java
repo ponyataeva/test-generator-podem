@@ -1,6 +1,6 @@
 package algorithm.fan;
 
-import algorith.podem.PodemApplication;
+import algorithm.podem.PodemApplication;
 import model.entities.Fact;
 import model.entities.FaultType;
 import model.entities.Rule;
