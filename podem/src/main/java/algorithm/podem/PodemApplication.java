@@ -32,7 +32,7 @@ public class PodemApplication {
         FactUtils.getAllFacts().forEach(fact -> {
             fact.setFaultType(FaultType.sa0);
             try {
-                new PodemApplication(scheme, fact).execute();
+                new PodemApplication().execute(scheme, fact);
                 System.out.println(scheme.getTest());
                 scheme.print();
             } catch (Exception e) {
@@ -44,18 +44,16 @@ public class PodemApplication {
         });
     }
 
-    public PodemApplication(Scheme scheme, Fact fault) {
-        this.scheme = scheme;
-        this.fault = fault;
-        findPropagationPath();
-    }
-
-    public boolean execute() {
+    public boolean execute(Scheme scheme, Fact fault) {
         // select path for fault propagation from fault to neares PO
         // select objective
         // backtrace from objective (set only PI) and put this PI to implication stack
         // forward implication:
         // values after fault should be D or not D
+
+        this.scheme = scheme;
+        this.fault = fault;
+        findPropagationPath();
 
         Fact fact = objective(); // obtain objective
         fact = backtrace(fact); // there is state is a PI
@@ -69,7 +67,7 @@ public class PodemApplication {
         List<Rule> dFrontier = getDFrontier(fault);
         if (xPathCheck(dFrontier)) { // is test possible
 
-            if (execute()) {
+            if (execute(scheme, fault)) {
                 System.out.println("Success! Test was generated");
                 generatedTests.add(scheme.getTest());
                 return true;
@@ -92,7 +90,7 @@ public class PodemApplication {
                         return true;
                     }
                     if (xPathCheck(getDFrontier(fault))) { // is test possible
-                        if (execute()) {
+                        if (execute(scheme, fault)) {
                             System.out.println("Success " + scheme.getPIs());
                             generatedTests.add(scheme.getTest());
                             return true;
